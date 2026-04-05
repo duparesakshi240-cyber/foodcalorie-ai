@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Food Calorie AI - Login</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+/* ---------------- BODY ---------------- */
+
+body{
+height:100vh;
+margin:0;
+font-family:'Segoe UI',sans-serif;
+
+background-image:url("{{ url_for('static', filename='bg_login.png') }}");
+background-size:cover;
+background-position:center;
+
+display:flex;
+justify-content:center;
+align-items:center;
+overflow:hidden;
+}
+
+/* ---------------- LOGIN CARD ---------------- */
+
+.login-card{
+
+width:460px;
+padding:35px;   /* was 50px → reduced */
+
+border-radius:28px;
+background:rgba(255,255,255,0.15);
+backdrop-filter:blur(20px);
+border:1px solid rgba(255,255,255,0.45);
+box-shadow:0 25px 50px rgba(0,0,0,0.15);
+
+text-align:center;
+z-index:2;
+
+}
+
+/* ---------------- LOGO ---------------- */
+
+.logo-header{
+
+width:100%;
+height:150px;   /* was 180px → smaller */
+
+border-radius:18px;
+overflow:hidden;
+
+background:linear-gradient(135deg,#ffffff,#f7f2ee);
+
+margin-bottom:15px;  /* reduced spacing */
+
+box-shadow:0 12px 30px rgba(0,0,0,0.25);
+
+}
+
+.logo-header img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+/* ---------------- TEXT ---------------- */
+
+.subtitle{
+font-size:16px;
+color:#5A3A2C;
+margin-bottom:25px;
+}
+
+.signup{
+margin-top:18px;
+color:#5A3A2C;
+}
+
+.signup a{
+color:#E63946;
+font-weight:600;
+text-decoration:none;
+}
+
+.signup a:hover{
+text-decoration:underline;
+}
+
+/* ---------------- TIP ---------------- */
+
+.tip{
+margin-top:20px;
+padding:18px;
+border-radius:18px;
+
+background:rgba(255,255,255,0.25);
+font-size:15px;
+color:#4A2F24;
+}
+
+/* ---------------- INPUT ---------------- */
+
+.input-group-text{
+background:rgba(255,255,255,0.55);
+border:none;
+color:#5A3A2C;
+}
+
+.form-control{
+background:rgba(255,255,255,0.55);
+border:none;
+border-radius:12px;
+padding:12px;
+color:#3A2A22;
+}
+
+.form-control:focus{
+outline:none;
+box-shadow:0 0 0 2px #E63946;
+}
+
+.form-control::placeholder{
+color:#7a5a4c;
+}
+
+/* ---------------- BUTTON ---------------- */
+
+.login-btn{
+background:#E63946;
+border:none;
+padding:12px;
+width:100%;
+border-radius:10px;
+color:white;
+font-weight:600;
+transition:0.3s;
+}
+
+.login-btn:hover{
+background:#C92A2A;
+transform:scale(1.04);
+}
+
+/* ---------------- EMOJIS ---------------- */
+
+.food{
+position:absolute;
+font-size:42px;
+opacity:0.9;
+filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.25));
+animation:float 7s infinite ease-in-out;
+z-index:1;
+}
+
+@keyframes float{
+0%{transform:translateY(0)}
+50%{transform:translateY(-40px)}
+100%{transform:translateY(0)}
+}
+
+/* positions */
+.food1{top:5%;left:5%}
+.food2{top:10%;left:20%}
+.food3{top:15%;left:80%}
+.food4{top:30%;left:90%}
+.food5{top:70%;left:10%}
+.food6{top:80%;left:50%}
+.food7{top:40%;left:85%}
+.food8{top:50%;left:20%}
+.food9{top:65%;left:70%}
+.food10{top:20%;left:60%}
+.food11{top:35%;left:5%}
+.food12{top:60%;left:90%}
+.food13{top:45%;left:40%}
+.food14{top:75%;left:75%}
+.food15{top:85%;left:30%}
+.food16{top:55%;left:60%}
+.food17{top:25%;left:35%}
+.food18{top:72%;left:45%}
+.food19{top:12%;left:45%}
+.food20{top:8%;left:70%}
+.food21{top:18%;left:10%}
+.food22{top:50%;left:95%}
+.food23{top:70%;left:30%}
+.food24{top:90%;left:60%}
+.food25{top:40%;left:55%}
+.food26{top:65%;left:15%}
+.food27{top:25%;left:75%}
+.food28{top:82%;left:85%}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- EMOJIS -->
+<div class="food food1">🍕</div>
+<div class="food food2">🍋</div>
+<div class="food food3">🍟</div>
+<div class="food food4">🍩</div>
+<div class="food food5">🍜</div>
+<div class="food food6">🧁</div>
+<div class="food food7">🥗</div>
+<div class="food food8">🍎</div>
+<div class="food food9">🍉</div>
+<div class="food food10">🍇</div>
+
+<!-- LOGIN CARD -->
+<div class="login-card">
+
+<div class="logo-header">
+<img src="{{ url_for('static', filename='logo2.png') }}">
+</div>
+
+<div class="subtitle">
+Track meals. Understand nutrition.
+</div>
+
+<form method="POST" action="/login">
+
+<div class="mb-3">
+<div class="input-group">
+<span class="input-group-text"><i class="fa fa-envelope"></i></span>
+<input type="email" name="email" class="form-control" placeholder="Enter your email" required>
+</div>
+</div>
+
+<div class="mb-3">
+<div class="input-group">
+<span class="input-group-text"><i class="fa fa-lock"></i></span>
+
+<input
+type="password"
+id="password"
+name="password"
+class="form-control"
+placeholder="Enter your password"
+pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}"
+title="Must contain 8+ chars, uppercase, lowercase, number & special char"
+required>
+
+<span class="input-group-text" onclick="togglePassword()" style="cursor:pointer;">
+<i class="fa fa-eye"></i>
+</span>
+
+</div>
+
+<!-- password hint -->
+<small style="color:#5A3A2C;">
+8+ chars, A-Z, a-z, number & special char
+</small>
+
+</div>
+
+<button type="submit" class="login-btn">Login</button>
+
+</form>
+
+<div class="signup">
+Don't have an account?
+<a href="/signup">Sign Up</a>
+</div>
+
+<div class="tip">
+💡 <b>Today's Tip</b><br>
+Balance your meals with vegetables and proteins.
+</div>
+
+</div>
+
+<!-- PASSWORD TOGGLE SCRIPT -->
+<script>
+function togglePassword(){
+let pass = document.getElementById("password");
+pass.type = pass.type === "password" ? "text" : "password";
+}
+</script>
+
+</body>
+</html>

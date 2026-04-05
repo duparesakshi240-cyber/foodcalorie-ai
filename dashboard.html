@@ -1,0 +1,1608 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    background-size: cover;
+    background: url("/static/bg.jpeg") no-repeat center;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.overlay {
+    min-height: 100vh;
+    padding-bottom: 30px;
+}
+
+/* NAVBAR */
+.custom-navbar {
+    background: #ffffff;
+    border-radius: 20px;
+    margin: 20px;
+    padding: 15px 30px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.logo-text {
+    font-weight: bold;
+    font-size: 20px;
+    color: #333;
+}
+
+/* HEADING */
+.dashboard-title {
+    font-weight: 700;
+    font-size: 32px;
+    text-align: center;
+}
+
+
+.goal-wrapper {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    margin: 20px auto;
+}
+
+.progress-ring {
+    transform: rotate(-90deg);
+}
+
+.progress-ring__circle-bg {
+    opacity: 0.4;
+}
+
+.progress-ring__circle {
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.8s ease;
+    transform: rotate(-90deg);
+    transform-origin: center;
+}
+
+/* Center percentage text */
+.circle-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 28px;
+    font-weight: bold;
+    color: #1f2937;
+}
+/* Orange highlight text */
+.highlight-text {
+    background: linear-gradient(45deg, #ff7b00, #ff3d00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Subtitle */
+.dashboard-subtitle {
+    text-align: center;
+    color: #333;
+    font-size: 15px;
+}
+/* NAVBAR BUTTONS - PREMIUM STYLE */
+.nav-links .nav-item {
+    margin-left: 15px;
+    padding: 8px 20px;
+    border-radius: 25px;
+
+    text-decoration: none;   /* remove underline */
+    display: inline-block;   /* better button feel */
+
+    /* Soft default look */
+    background: white;
+    color: #ff6b00;
+    font-weight: 500;
+    cursor: pointer;
+
+    transition: all 0.3s ease;
+}
+
+/* HOVER EFFECT */
+.nav-links .nav-item:hover {
+    background: linear-gradient(45deg, #ff7b00, #ff3d00);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(255, 107, 0, 0.4);
+}
+
+/* ACTIVE BUTTON (Current Page) */
+.nav-links .active {
+    background: linear-gradient(45deg, #ff7b00, #ff3d00);
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(255, 107, 0, 0.5);
+}
+
+/* CLICK EFFECT */
+.nav-links .nav-item:active {
+    transform: scale(0.95);
+}
+.btn-orange {
+    background: linear-gradient(135deg, #ff7a00, #ff5e00);
+    color: #fff;
+
+    border: none;
+    border-radius: 25px;
+
+    padding: 8px 18px;
+    font-weight: 600;
+    font-size: 14px;
+
+    transition: all 0.3s ease;
+
+    box-shadow: 0 4px 10px rgba(255, 122, 0, 0.4);
+}
+
+/* hover effect */
+.btn-orange:hover {
+    background: linear-gradient(135deg, #ff8c1a, #ff6a00);
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 6px 14px rgba(255, 122, 0, 0.6);
+}
+
+/* click effect */
+.btn-orange:active {
+    transform: scale(0.96);
+    box-shadow: 0 3px 8px rgba(255, 122, 0, 0.4);
+}
+
+/* CARDS */
+.card {
+    border-radius: 20px;
+    background: linear-gradient(145deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85));
+    border: 1px solid rgba(255,255,255,0.4);
+    box-shadow:
+        0 10px 25px rgba(0,0,0,0.08),
+        inset 0 1px 2px rgba(255,255,255,0.6);
+}
+
+/* GOAL CIRCLE */
+.goal-circle {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: conic-gradient(#4CAF50 0deg, #e0e0e0 0deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 15px auto;
+    position: relative;
+}
+
+.goal-circle::before {
+    content: "";
+    position: absolute;
+    width: 110px;
+    height: 110px;
+    background: white;
+    border-radius: 50%;
+}
+
+.goal-text {
+    position: relative;
+    font-size: 26px;
+    font-weight: bold;
+}
+
+/* PREMIUM NUTRIENT */
+.nutrient-text {
+    font-size: 13px;
+    color: #666;
+    font-weight: 500;
+}
+
+.nutrient-row span:first-child {
+    font-weight: 600;
+    color: #333;
+}
+
+.progress {
+    height: 8px;
+    border-radius: 10px;
+    background: #f1f1f1;
+}
+
+.progress-bar {
+    border-radius: 10px;
+}
+
+.meal-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+
+    /* soft orange highlight */
+    background: rgba(255, 122, 0, 0.08);
+
+    transition: all 0.3s ease;
+}
+ .meal-item:hover {
+    transform: translateX(5px);
+    background: rgba(255, 122, 0, 0.15);
+}
+ /* LEFT SIDE */
+.meal-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.meal-emoji {
+    font-size: 20px;
+}
+.meal-name {
+    font-weight: 600;
+    color: #333;
+    font-size: 14px;
+}
+
+.meal-time {
+    font-size: 12px;
+    color: #888;
+}
+/* RIGHT SIDE */
+.meal-cal {
+    font-weight: 600;
+    color: #ff7a00;
+}
+.badge-card {
+    background: rgba(255,255,255,0.9);
+    border-radius: 15px;
+    padding: 15px;
+}
+
+.dashboard-title {
+    color: white;
+    font-weight: 600;
+    text-align: center;
+}
+
+.btn-green {
+    background: linear-gradient(to right, #66bb6a, #43a047);
+    border: none;
+    color: white;
+    padding: 10px;
+    border-radius: 25px;
+    width: 100%;
+}
+#plannedMeals {
+    text-align: left;
+    margin-top: 10px;
+}
+
+.plan-item {
+    background: rgba(255, 122, 0, 0.08);
+    border-radius: 12px;
+    padding: 10px;
+    margin-bottom: 8px;
+    transition: 0.3s;
+}
+
+.plan-item:hover {
+    background: rgba(255, 122, 0, 0.15);
+}
+
+.plan-title {
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+}
+
+.plan-sub {
+    font-size: 12px;
+    color: #777;
+}
+/* ================= WEEKLY GOALS (STICKER STYLE) ================= */
+
+.weekly-goals-card {
+    border-radius: 20px;
+    background: linear-gradient(145deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85));
+    background: url("/static/bg.png") center/cover no-repeat;
+    backdrop-filter: blur(12px);
+    box-shadow:
+        0 10px 25px rgba(0,0,0,0.08),
+        inset 0 1px 2px rgba(255,255,255,0.6);
+    padding: 15px;
+}
+
+
+/* Each item */
+.goal-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.goal-item:hover {
+    transform: translateY(-6px) scale(1.05);
+}
+
+/* Sticker images */
+.goal-img {
+    width: 95px;
+    height: 95px;
+
+    object-fit: contain;   /* 🔥 ensures full image visible */
+
+    margin-bottom: 10px;
+
+    background: radial-gradient(circle, #f5f2f2, transparent);
+    padding: 12px;
+    border-radius: 50%;
+
+    transition: 0.3s ease;
+}
+/* Title */
+
+.goal-title {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 2px;
+}
+
+/* Value */
+.goal-value {
+    font-weight: 700;
+    font-size: 16px;
+    color: #333;
+}
+
+/* Pagination style */
+.goal-pagination {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.dot {
+    display: inline-block;
+    padding: 4px 10px;
+    margin: 0 4px;
+    border-radius: 10px;
+    background: #eee;
+    font-size: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.dot:hover {
+    background: #ddd;
+}
+
+.dot.active {
+    background: linear-gradient(45deg, #ff7b00, #ff3d00);
+    color: white;
+}
+/* Tip container */
+/* Container height increased for image */
+#tipBox {
+    position: relative;
+    height: 180px;
+    overflow: hidden;
+}
+
+/* Tip item */
+.tip-item {
+    position: absolute;
+    width: 100%;
+
+    opacity: 0;
+    transform: translateX(100%); /* 👉 start from right */
+
+    transition: all 0.6s ease;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+
+/* Active (visible center) */
+.tip-item.active {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Previous (slide left) */
+.tip-item.prev {
+    transform: translateX(-100%);
+    opacity: 0;
+}
+
+/* Text */
+.tip-item span {
+    font-size: 14px;
+    font-weight: 600;
+    color: #d30f5a;
+    margin-bottom: 8px;
+}
+
+/* Image */
+.tip-img {
+    width: 120px;
+    height: auto;
+    object-fit: contain;
+    transition: 0.3s ease;
+}
+
+.tip-item.active .tip-img {
+    transform: scale(1.1);
+}
+/* ================= TODAY GOAL BACKGROUND ================= */
+
+.goal-bg-card {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+
+    /* 🔥 Background image */
+    background: url("/static/todaysgoal.png") center/cover no-repeat;
+
+    /* Optional overlay for readability */
+    background-blend-mode: overlay;
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+/* ================= WEEKLY INTAKE BACKGROUND ================= */
+
+.weekly-bg-card {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+
+    /* Background image */
+    background: url("/static/weeklyintake.png") center/cover no-repeat;
+
+    /* Light overlay so chart is visible */
+    background-color: rgba(255, 255, 255, 0.65);
+    background-blend-mode: overlay;
+}
+
+/* Keep content above background */
+.weekly-bg-card * {
+    position: relative;
+    z-index: 1;
+}
+/* ================= RECENT MEALS BACKGROUND ================= */
+
+.recent-bg-card {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+
+    /* Background image */
+    background: url("/static/recentmeal.png") center/cover no-repeat;
+
+    /* 🔥 Light overlay (so text visible but image still shows) */
+    background-color: rgba(255, 255, 255, 0.8);
+    background-blend-mode: overlay;
+}
+
+/* Keep content above */
+.recent-bg-card * {
+    position: relative;
+    z-index: 1;
+}
+/* ================= NUTRIENT BREAKDOWN BG (NO BLUR) ================= */
+
+.nutrient-bg-card {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+
+    /* Background image */
+    background: url("/static/nutrientbreak.png") center/cover no-repeat;
+
+    /* 🔥 Light overlay for readability */
+    background-color: rgba(255, 255, 255, 0.75);
+    background-blend-mode: overlay;
+}
+
+/* Keep content above */
+.nutrient-bg-card * {
+    position: relative;
+    z-index: 1;
+}
+/* ================= HEALTH TIPS BACKGROUND ================= */
+
+.health-card {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+
+    /* Background image */
+    background: url("/static/bg.png") center/cover no-repeat;
+
+    /* Light overlay (matches your theme) */
+    background-color: rgba(255, 255, 255, 0.75);
+    background-blend-mode: overlay;
+}
+
+/* Keep content above background */
+.health-card * {
+    position: relative;
+    z-index: 1;
+}
+
+#meals {
+    max-height: 280px;   /* 🔥 adjust as you like */
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+/* ✨ Custom scrollbar */
+#meals::-webkit-scrollbar {
+    width: 6px;
+}
+
+#meals::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.05);
+    border-radius: 10px;
+}
+
+#meals::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #ff7b00, #ff3d00);
+    border-radius: 10px;
+}
+
+#meals::-webkit-scrollbar-thumb:hover {
+    background: #ff3d00;
+}
+
+    /*heading:weekly Intake*/
+   .premium-heading {
+    font-size: 22px;
+    font-weight: 700;
+    text-align: center;
+
+    color: #ff4500; /* bright deep orange */
+
+    letter-spacing: 1px;
+}
+
+/* underline glow */
+.premium-heading::after {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 3px;
+    margin: 6px auto 0;
+
+    background: #ff7a00;
+    border-radius: 5px;
+
+    box-shadow: 0 0 10px rgba(255, 122, 0, 0.8);
+}
+}
+/* smooth gradient movement */
+@keyframes shine {
+    to {
+        background-position: 200% center;
+    }
+}
+
+    /*hero-section*/
+
+    /* Hero */
+.hero {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.hero h1 {
+    font-weight: 700;
+}
+
+.hero span {
+    color: #ff4500;
+}
+    .calorie-box {
+    text-align: center;
+    margin-top: 10px;
+}
+/*Today's goal*/
+.cal-text {
+    font-size: 22px;
+    margin: 0;
+    font-weight: 700;
+    color: #008000;
+}
+
+.remaining-text {
+    font-size: 13px;
+    display: inline-block;
+    margin-top: 4px;
+    color: #2e7d32; /* premium green */
+    background: rgba(46, 125, 50, 0.1);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 500;
+}
+    /* label style */
+.nutrient-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* percentage text */
+.nutrient-text {
+    font-size: 13px;
+    font-weight: 700;
+    color: #ff7a00; /* Fanta orange */
+
+    text-shadow: 0 0 5px rgba(255, 122, 0, 0.4);
+}
+
+/* progress container */
+.custom-progress {
+    height: 8px;
+    border-radius: 10px;
+    background: rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+/* smooth animation */
+.progress-bar {
+    border-radius: 10px;
+    transition: width 0.6s ease;
+}
+
+/* custom premium colors */
+.protein-bar {
+    background: linear-gradient(90deg, #00c853, #64dd17);
+}
+
+.carbs-bar {
+    background: linear-gradient(90deg, #ffb300, #ff8f00);
+}
+
+.fat-bar {
+    background: linear-gradient(90deg, #ff5252, #d50000);
+}
+    .nutrient-row:hover {
+    transform: translateX(3px);
+    transition: 0.2s;
+}
+.stat-item {
+    font-size: 14px;
+    font-weight: 700;
+
+    color: #ff7a00;
+
+    background: rgba(255, 122, 0, 0.08);
+    padding: 8px;
+    border-radius: 12px;
+
+    text-align: center;
+
+    box-shadow: 0 3px 8px rgba(255, 122, 0, 0.2);
+}
+    .label {
+    opacity: 0.7;
+    margin-right: 5px;
+}
+/* change */
+    @media (max-width: 768px) {
+    .custom-navbar {
+        text-align: center;
+        padding: 10px;
+    }
+
+    .nav-links {
+        width: 100%;
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+    .nav-links .nav-item {
+        margin: 5px;
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+}
+    @media (max-width: 768px) {
+
+    .row {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .col-md-3,
+    .col-md-6 {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .card {
+        margin-bottom: 15px;
+    }
+}
+    canvas {
+    max-width: 100% !important;
+    height: auto !important;
+}
+</style>
+</head>
+
+<body>
+
+<div class="overlay">
+
+
+<!-- NAVBAR change  -->
+<div class="custom-navbar d-flex flex-wrap justify-content-between align-items-center">
+    <h5>🍎 FoodCalorie AI</h5>
+
+    <div class="nav-links d-flex flex-wrap justify-content-center mt-2 mt-md-0">
+        <a href="/home" class="nav-item">Home</a>
+        <a href="/dashboard" class="nav-item">Dashboard</a>
+        <a href="/history" class="nav-item">History</a>
+        <a href="/profile" class="nav-item">Profile</a>
+    </div>
+</div>
+
+    <div class="container">
+<div class="text-center mt-3 mb-4">
+    <div class="hero">
+    <h1>AI Food <span>Calorie Dashboard</span></h1>
+    <p> Track your daily nutrition, monitor calories, and stay healthy with smart insights.</p>
+</div>
+
+
+    <div class="row">
+
+<!-- LEFT -->
+<div class="col-md-3">
+
+<!-- Today's Goals -->
+<div class="card p-3 mb-3 text-center goal-bg-card">
+   <h6 class="premium-heading">Today's Goal</h6>
+    <div class="goal-wrapper">
+
+
+        <svg class="progress-ring" width="140" height="140">
+
+            <circle class="progress-ring__circle-bg"
+                stroke="#eee"
+                stroke-width="12"
+                fill="transparent"
+                r="54"
+                cx="70"
+                cy="70"/>
+
+            <circle class="progress-ring__circle"
+                stroke="url(#gradient)"
+                stroke-width="12"
+                fill="transparent"
+                r="54"
+                cx="70"
+                cy="70"/>
+
+            <defs>
+                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#fcd34d"/>
+                    <stop offset="100%" stop-color="#16a34a"/>
+                </linearGradient>
+            </defs>
+
+        </svg>
+
+        <div class="circle-text">72%</div>
+    </div>
+    <div class="calorie-box">
+    <p class="cal-text"><b id="calText">0 / 2000 kcal</b></p>
+    <small class="remaining-text" id="remainingText">0 left</small>
+</div>
+
+   <button class="btn btn-orange mt-3" onclick="viewTodayLog()">
+    View Today's Log
+</button>
+</div>
+
+
+<!-- ✅ KEEP ONLY ONE Healthy Tips -->
+<div class="card p-3 mb-3 health-card">
+ <h6 class="premium-heading">Health Tips 💡</h6>
+
+<div id="tipBox">
+
+    <div class="tip-item active">
+        <span><b>Eat more vegetables & fruits</b></span>
+        <img src="/static/veg-fruit.png" class="tip-img">
+    </div>
+
+    <div class="tip-item">
+        <span>Avoid oily & processed food</span>
+        <img src="/static/oily.png" class="tip-img">
+    </div>
+
+    <div class="tip-item">
+        <span> Drink at least 2-3 liters of water daily</span>
+        <img src="/static/waterbottle.png" class="tip-img">
+    </div>
+
+    <div class="tip-item">
+        <span>🍗 Include protein in every meal</span>
+        <img src="/static/tips/protein.png" class="tip-img">
+    </div>
+
+    <div class="tip-item">
+        <span>🏃 Stay active & exercise regularly</span>
+        <img src="/static/tips/exercise.png" class="tip-img">
+    </div>
+
+</div>
+</div>
+
+</div> <!-- ✅ FIXED: LEFT COLUMN CLOSED -->
+
+<!-- CENTER -->
+<div class="col-md-6">
+
+<div class="card p-3 mb-3 weekly-bg-card">
+    <h6 class="premium-heading">Weekly Intake</h6>
+   <canvas id="weeklyChart" height="250"></canvas>
+</div>
+
+<!-- NUTRIENT -->
+<div class="card p-3 nutrient-bg-card">
+ <h6 class="premium-heading">Nutrient Breakdown</h6>
+
+<div class="d-flex flex-column flex-md-row align-items-center">
+
+<div style="width:100%; max-width:250px">
+<canvas id="pieChart"></canvas>
+</div>
+    <!-- change 1 -->
+<div style="width:100%; padding-left:0; margin-top:10px">
+<div class="nutrient-row">
+<div class="d-flex justify-content-between align-items-center">
+<span class="nutrient-label">💪 Protein</span>
+<span class="nutrient-text" id="proteinText">0%</span>
+</div>
+<div class="progress custom-progress mb-3">
+<div class="progress-bar protein-bar" id="proteinBar"></div>
+</div>
+</div>
+
+
+<div class="nutrient-row">
+<div class="d-flex justify-content-between align-items-center">
+<span class="nutrient-label">⚡ Carbs</span>
+<span class="nutrient-text" id="carbsText">0%</span>
+</div>
+<div class="progress custom-progress mb-3">
+<div class="progress-bar carbs-bar" id="carbsBar"></div>
+</div>
+</div>
+
+
+<div class="nutrient-row">
+<div class="d-flex justify-content-between align-items-center">
+<span class="nutrient-label">🔥 Fat</span>
+<span class="nutrient-text" id="fatText">0%</span>
+</div>
+<div class="progress custom-progress">
+<div class="progress-bar fat-bar" id="fatBar"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- RIGHT -->
+<div class="col-md-3">
+
+<div class="card p-3 mb-3 recent-bg-card">
+     <h6 class="premium-heading">Recent Meals</h6>
+    <div id="meals"></div>
+</div>
+<!-- Weekly Goals -->
+<div class="card p-3 weekly-goals-card">
+
+     <h6 class="premium-heading">Weekly Goals</h6>
+
+    <div class="row text-center">
+
+        <!-- Calories -->
+        <div class="col-4 goal-item">
+            <img src="static/tracked.png" class="goal-img" alt="Calories">
+           <h6 class="goal-value" id="weeklyCalories">0 kcal</h6>
+        </div>
+
+        <!-- Meals -->
+        <div class="col-4 goal-item">
+           <img src="static/meallog.png" class="goal-img" alt="Meals">
+            <h6 class="goal-value" id="weeklyMeals">0</h6>
+        </div>
+
+        <!-- Streak -->
+        <div class="col-4 goal-item">
+            <img src="static/strdays.png" class="goal-img" alt="Streak">
+            <h6 class="goal-value" id="streak">0 Day Streak</h6>
+        </div>
+
+    </div>
+
+    <!-- Pagination dots -->
+    <div class="goal-pagination mt-3">
+        <span class="dot active">1</span>
+        <span class="dot">2</span>
+        <span class="dot">3</span>
+        <span class="dot">4</span>
+    </div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+</div>
+
+<script>
+
+
+// ================= BAR =================
+const ctxBar = document.getElementById('weeklyChart').getContext('2d');
+Chart.defaults.font.family = "'Poppins', sans-serif"; // premium font
+
+const originalDraw = Chart.controllers.bar.prototype.draw;
+Chart.controllers.bar.prototype.draw = function() {
+    const ctx = this.chart.ctx;
+    ctx.save();
+    ctx.shadowColor = "rgba(255, 122, 0, 0.4)";
+    ctx.shadowBlur = 8;  // subtle glow
+    originalDraw.apply(this, arguments);
+    ctx.restore();
+};
+let weeklyChart = new Chart(ctxBar, {
+    type: 'bar',
+    data: {
+        labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+        datasets: [{
+            label: 'Calories',
+            data: [0,0,0,0,0,0,0],
+
+            // 🔥 GRADIENT COLOR (MAIN MAGIC)
+            backgroundColor: function(context) {
+                const chart = context.chart;
+                const {ctx, chartArea} = chart;
+
+                if (!chartArea) return;
+
+                const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+                gradient.addColorStop(0, "#ff9a2e");   // bottom
+                gradient.addColorStop(1, "#ff3d00");   // top
+
+                return gradient;
+            },
+
+            borderRadius: 14,
+            barThickness: 28,
+            borderWidth: 0,
+
+            // 🔥 HOVER EFFECT
+            hoverBackgroundColor: "#ff5722"
+        }]
+    },
+
+    options: {
+        responsive: true,
+
+        // 🔥 SMOOTH ANIMATION
+        animation: {
+            duration: 1400,
+            easing: 'easeOutQuart'
+        },
+
+        scales: {
+            x: {
+    ticks: {
+        color: "#ff7a00", // Fanta orange
+
+        font: {
+            weight: '700',
+            size: 13
+        },
+
+        padding: 8,
+
+        // ✨ make labels look cleaner
+        callback: function(value) {
+            const labels = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+            return labels[value];
+        }
+    },
+    grid: {
+        display: false
+    }
+}
+        },
+
+        plugins: {
+            tooltip: {
+                backgroundColor: "#1f2937",
+                titleColor: "#fff",
+                bodyColor: "#fff",
+                cornerRadius: 10,
+                padding: 12,
+                displayColors: false,
+                callbacks: {
+                    label: function(context) {
+                        return context.raw + " kcal 🔥";
+                    }
+                }
+            },
+
+            legend: {
+                display: false
+            }
+        }
+    }
+});
+// FETCH DATA
+fetch('/api/data')
+.then(res => res.json())
+.then(data => {
+
+console.log("WEEKLY DATA:", data.weekly);
+
+// ✅ Weekly Calories
+document.getElementById("weeklyCalories").innerText =
+    data.weekly_total + " kcal";
+
+    // ✅ Weekly Meals Count
+document.getElementById("weeklyMeals").innerText =
+    data.weekly_meals;
+
+    // ✅ Streak
+document.getElementById("streak").innerText =
+    data.streak + " Day Streak";
+
+let html = "";
+data.meals.forEach(m => {
+   html += `
+   <div class="meal-item">
+        <div class="meal-left">
+            <img src="${m.image}" width="40" height="40" style="border-radius:8px;">
+            <div>
+                <div class="meal-name">${m.name}</div>
+                <div class="meal-time">${m.time || "--:--"}</div>
+            </div>
+        </div>
+        <div class="meal-cal">${m.cal} kcal</div>
+   </div>`;
+});
+
+// ================= PIE CHART FIX =================
+setTimeout(() => {
+
+    const protein = Number(data.protein) || 0;
+    const carbs = Number(data.carbs) || 0;
+    const fats = Number(data.fats) || 0;
+
+    console.log("Pie Data:", protein, carbs, fats);
+
+    const canvas = document.getElementById("pieChart");
+
+    if (!canvas) {
+        console.log("Canvas not found");
+        return;
+    }
+
+    const ctx = canvas.getContext("2d");
+
+    if (window.pieChart && typeof window.pieChart.destroy === "function") {
+    window.pieChart.destroy();
+}
+
+/*change3*/
+const centerTextPlugin = {
+    id: 'centerText',
+
+    afterDatasetsDraw(chart) {
+        const { ctx } = chart;
+        const meta = chart.getDatasetMeta(0);
+        const x = meta.data[0].x;
+        const y = meta.data[0].y;
+
+        const data = chart.data.datasets[0].data;
+       const total = 100;
+
+        // initialize animation value
+        if (chart._animatedValue === undefined) {
+            chart._animatedValue = 0;
+        }
+
+        // smooth increment
+        chart._animatedValue += (total - chart._animatedValue) * 0.1;
+
+        const displayValue = Math.round(chart._animatedValue);
+
+        ctx.save();
+
+        // main text
+        ctx.font = "bold 26px Poppins";
+        ctx.fillStyle = "#ff3d00";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(displayValue + "%", x, y - 5);
+
+        // sub text
+        ctx.font = "13px Poppins";
+        ctx.fillStyle = "#888";
+        ctx.fillText("Total", x, y + 14);
+
+        ctx.restore();
+
+        // 🔥 force redraw until animation completes
+        if (displayValue !== total) {
+            requestAnimationFrame(() => chart.update());
+        }
+    }
+};
+/*change 4*/
+const innerGlowPlugin = {
+    id: 'innerGlow',
+
+    beforeDraw(chart) {
+        const { ctx } = chart;
+        const meta = chart.getDatasetMeta(0);
+
+        if (!meta || !meta.data || !meta.data.length) return;
+
+        const arc = meta.data[0];
+        const x = arc.x;
+        const y = arc.y;
+        const radius = arc.innerRadius;
+
+        // rotation
+        if (!chart._angle) chart._angle = 0;
+        chart._angle += 0.01; // slow premium motion
+
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(chart._angle);
+
+        // soft gradient light
+        const gradient = ctx.createLinearGradient(-radius, 0, radius, 0);
+        gradient.addColorStop(0, "rgba(255,122,0,0)");
+        gradient.addColorStop(0.5, "rgba(255,122,0,0.25)");
+        gradient.addColorStop(1, "rgba(255,122,0,0)");
+
+        ctx.beginPath();
+        ctx.fillStyle = gradient;
+        ctx.arc(0, 0, radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+
+        // continuous animation
+        requestAnimationFrame(() => chart.draw());
+    }
+};
+/*change 5*/
+const movingDotPlugin = {
+    id: 'movingDot',
+
+    afterDraw(chart) {
+        const { ctx } = chart;
+        const meta = chart.getDatasetMeta(0);
+
+        if (!meta || !meta.data || !meta.data.length) return;
+
+        const arc = meta.data[0];
+        const x = arc.x;
+        const y = arc.y;
+        const radius = (arc.innerRadius + arc.outerRadius) / 2;
+
+        // angle animation
+        if (!chart._angle) chart._angle = 0;
+        chart._angle += 0.008;
+
+        const dotX = x + Math.cos(chart._angle) * radius;
+        const dotY = y + Math.sin(chart._angle) * radius;
+
+        ctx.save();
+
+        // glow
+        ctx.shadowColor = "#ff7a00";
+        ctx.shadowBlur = 12;
+
+        ctx.beginPath();
+        ctx.fillStyle = "#ff7a00";
+        ctx.arc(dotX, dotY, 4, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+
+        // 🔥 force continuous redraw
+        requestAnimationFrame(() => chart.draw());
+    }
+};
+/*change 6*/
+const glassPulsePlugin = {
+    id: 'glassPulse',
+
+    beforeDraw(chart) {
+        const { ctx } = chart;
+        const meta = chart.getDatasetMeta(0);
+
+        if (!meta || !meta.data || !meta.data.length) return;
+
+        const arc = meta.data[0];
+        const x = arc.x;
+        const y = arc.y;
+        const radius = arc.innerRadius;
+
+        if (!chart._pulse) chart._pulse = 0;
+        chart._pulse += 0.02;
+
+        const glow = 0.15 + Math.sin(chart._pulse) * 0.08;
+
+        ctx.save();
+
+        // glass base
+        ctx.beginPath();
+        ctx.fillStyle = "rgba(255,255,255,0.06)";
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // animated glow
+        const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
+        gradient.addColorStop(0, `rgba(255,122,0,${glow})`);
+        gradient.addColorStop(1, "rgba(255,122,0,0)");
+
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+
+        requestAnimationFrame(() => chart.draw());
+    }
+};
+/*change 2 - piechart*/
+    window.pieChart = new Chart(ctx, {
+        type: "doughnut",
+        data: {
+            labels: ["Protein", "Carbs", "Fat"],
+            datasets: [{
+                data: [proteinPercent, carbsPercent, fatsPercent],
+                 // 🎨 match with your progress bars
+            backgroundColor: [
+                "#00c853",   // Protein (green)
+                "#ff8f00",   // Carbs (orange)
+                "#ff3d00"    // Fat (deep orange/red)
+            ],
+             borderWidth: 0,
+            hoverOffset: 8   // 🔥 smooth hover pop
+        }]
+    },
+        options: {
+            responsive: true,
+            cutout: "70%",
+            animation: {
+            animateScale: true,
+            animateRotate: true,
+            duration: 1200,
+            easing: "easeOutQuart"
+        },
+          tooltip: {
+                backgroundColor: "#1f2937",
+                titleColor: "#fff",
+                bodyColor: "#fff",
+                cornerRadius: 10,
+                padding: 10,
+                displayColors: false,
+
+                callbacks: {
+                    label: function(context) {
+                        return context.label + ": " + context.raw + "%";
+                    }
+                }
+            }
+        },
+       plugins: [centerTextPlugin, glassPulsePlugin]
+    });
+
+}, 300); // small delay ensures DOM is ready
+
+// ================= DYNAMIC PROGRESS BARS =================
+
+const proteinVal = Number(data.protein) || 0;
+const carbsVal = Number(data.carbs) || 0;
+const fatsVal = Number(data.fats) || 0;
+
+const total = proteinVal + carbsVal + fatsVal;
+
+// avoid divide by zero
+let proteinPercent = 0;
+let carbsPercent = 0;
+let fatsPercent = 0;
+
+if (total > 0) {
+    proteinPercent = Math.round((proteinVal / total) * 100);
+    carbsPercent = Math.round((carbsVal / total) * 100);
+    fatsPercent = Math.round((fatsVal / total) * 100);
+}
+
+// update widths
+document.getElementById("proteinBar").style.width = proteinPercent + "%";
+document.getElementById("carbsBar").style.width = carbsPercent + "%";
+document.getElementById("fatBar").style.width = fatsPercent + "%";
+
+// update text
+document.getElementById("proteinText").innerText = proteinPercent + "%";
+document.getElementById("carbsText").innerText = carbsPercent + "%";
+document.getElementById("fatText").innerText = fatsPercent + "%";
+document.getElementById("meals").innerHTML = html;
+
+
+  // ================= TODAY GOAL =================
+let percent = Math.round((data.today_calories / data.goal) * 100);
+
+// limit to 100%
+if (percent > 100) percent = 100;
+
+// update text
+document.querySelector(".circle-text").innerText = percent + "%";
+
+// update calories text
+document.getElementById("calText").innerText =
+    data.today_calories + " / " + data.goal + " kcal";
+
+document.getElementById("remainingText").innerText =
+    (data.goal - data.today_calories) + " kcal left";
+
+// ================= 🔥 ANIMATE CIRCLE =================
+const circle = document.querySelector(".progress-ring__circle");
+
+if (circle) {
+    const radius = 54;
+    const circumference = 2 * Math.PI * radius;
+
+    circle.style.strokeDasharray = circumference;
+
+    // smooth animation
+    setTimeout(() => {
+        const offset = circumference - (percent / 100) * circumference;
+        circle.style.strokeDashoffset = offset;
+    }, 100);
+}
+// ================= TEXT DATA =================
+document.getElementById("calText").innerText =
+data.today_calories + " / " + data.goal + " kcal";
+
+document.getElementById("remainingText").innerText =
+(data.goal - data.today_calories) + " kcal left";
+/*change 7*/
+const weeklyCalories = document.getElementById("weeklyCalories");
+if (weeklyCalories) {
+
+    let color = "#ff7a00"; // default orange
+
+    if (data.weekly_total > 14000) { // high calories
+        color = "#ff3d00"; // red
+    } else if (data.weekly_total < 7000) {
+        color = "#4caf50"; // green (low/controlled)
+    }
+
+    weeklyCalories.innerHTML =
+        "<span class='label'>🔥</span> <b style='color:" + color + "'>" +
+        data.weekly_total + " kcal</b>";
+}
+const weeklyMeals = document.getElementById("weeklyMeals");
+if (weeklyMeals) {
+
+    let color = "#ff7a00";
+
+    if (data.total_meals >= 21) {
+        color = "#4caf50"; // consistent logging = good
+    }
+    const streak = document.getElementById("streak");
+if (streak) {
+
+    let color = "#ff7a00";
+
+    if (data.streak >= 7) {
+        color = "#ff3d00"; // strong streak
+    }
+    if (data.streak >= 15) {
+        color = "#d50000"; // 🔥 intense streak
+    }
+
+    streak.innerHTML =
+        "<span class='label'>🔥</span> <b style='color:" + color + "'>" +
+        data.streak + " days</b>";
+}
+    weeklyMeals.innerHTML =
+        "<span class='label'>🍽</span> <b style='color:" + color + "'>" +
+        data.total_meals + "</b>";
+}
+
+const tipText = document.getElementById("tipText");
+if (tipText) {
+    tipText.innerText = data.tip;
+}
+
+
+// ================= 🆕 WEEKLY GOALS =================
+
+// ✅ Weekly target
+const el = document.getElementById("weeklyTarget");
+if (el) {
+    el.innerText = "🎯 Weekly Target: " + (data.weekly_target || 14000) + " kcal";
+}
+
+// ✅ Planned target (AUTO CALCULATED 🔥)
+let plannedTotal = 0;
+(data.planned_meals || []).forEach(p => {
+    plannedTotal += p.cal * p.days;
+});
+
+
+
+// ================= WEEKLY CHART =================
+const weeklyData = (data.weekly || [0,0,0,0,0,0,0]).map(x => Number(x) || 0);
+
+console.log("Fixed Weekly Data:", weeklyData);
+
+// 🎨 Dynamic colors based on calories
+const bgColors = weeklyData.map(cal => {
+    if (cal < 1500) return "#4CAF50";   // green
+    if (cal < 2200) return "#FF9800";   // orange
+    return "#F44336";                   // red
+});
+
+// 🔥 UPDATE CHART (THIS IS YOUR LINE)
+weeklyChart.data.datasets[0].data = weeklyData;
+weeklyChart.data.datasets[0].backgroundColor = bgColors;
+
+weeklyChart.update();
+
+// ================= PLANNED MEALS =================
+let planHTML = "";
+
+(data.planned_meals || []).forEach(p => {
+    planHTML += `
+        <div class="plan-item">
+            <div class="plan-title">🍽️ ${p.name}</div>
+            <div class="plan-sub">
+                ${p.cal} kcal • ${p.days} days/week
+            </div>
+        </div>
+    `;
+});
+
+document.getElementById("plannedMeals").innerHTML = planHTML;
+
+});
+
+
+const dots = document.querySelectorAll(".dot");
+
+dots.forEach(dot => {
+    dot.addEventListener("click", function() {
+
+        // remove active from all
+        dots.forEach(d => d.classList.remove("active"));
+
+        // add active to clicked
+        this.classList.add("active");
+
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const tips = document.querySelectorAll(".tip-item");
+    let current = 0;
+
+    setInterval(() => {
+
+        // remove previous state
+        tips[current].classList.remove("active");
+        tips[current].classList.add("prev");
+
+        // next index
+        current = (current + 1) % tips.length;
+
+        // clean all
+        tips.forEach(tip => tip.classList.remove("prev"));
+
+        // activate new
+        tips[current].classList.add("active");
+
+    }, 3000);
+
+});
+
+const navItems = document.querySelectorAll(".nav-item");
+
+navItems.forEach(item => {
+    item.addEventListener("click", function() {
+        // Remove active from all
+        navItems.forEach(i => i.classList.remove("active"));
+
+        // Add active to clicked
+        this.classList.add("active");
+    });
+});
+
+
+    const bgColors = weeklyData.map(val => {
+    if (val === 0) return "#e0e0e0";      // no data
+    if (val < 1500) return "#4CAF50";     // good (green)
+    if (val < 2200) return "#FF9800";     // medium (orange)
+    return "#F44336";                     // high (red)
+});
+
+</script>
+<script>
+    function viewTodayLog() {
+    window.location.href = "/history?filter=today";
+}
+</script>
+<script>
+let currentThali = "indian"; // default
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const thaliMeta = {
+    indian: { title: "🍽️ Indian Thali" },
+    rajasthani: { title: "🥘 Rajasthani Thali" },
+    south: { title: "🍛 South Indian Thali" },
+    north: { title: "🍲 North Indian Thali" },
+    bengali: { title: "🐟 Bengali Thali" }
+  };
+
+  const titleEl = document.getElementById("thali-title");
+
+  document.querySelectorAll(".thali-btn").forEach(btn => {
+    btn.addEventListener("click", function () {
+
+      const key = this.dataset.thali;
+      if (!key || !thaliMeta[key]) return;
+
+      // ✅ store current thali
+      currentThali = key;
+
+      // ✅ update title
+      titleEl.textContent = thaliMeta[key].title;
+
+      // ✅ active highlight
+      document.querySelectorAll(".thali-btn").forEach(b => b.classList.remove("active"));
+      this.classList.add("active");
+
+    });
+  });
+
+});
+</script>
+</div>
+</body>
+</html>

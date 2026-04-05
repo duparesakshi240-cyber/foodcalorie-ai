@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Food Calorie Detection System</title>
+
+<style>
+
+body{
+    font-family: Arial;
+    text-align:center;
+    margin-top:40px;
+}
+
+video{
+    border:2px solid black;
+    border-radius:10px;
+}
+
+button{
+    padding:10px 20px;
+    font-size:16px;
+    margin-top:10px;
+    background:#2ecc71;
+    color:white;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+input{
+    margin-top:10px;
+}
+
+.qr-box{
+    margin-top:40px;
+    padding:20px;
+    border:1px solid #ccc;
+    display:inline-block;
+    border-radius:10px;
+}
+
+/* hide laptop webcam on mobile */
+@media screen and (max-width:768px){
+    #webcam-section{
+        display:none !important;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Food Calorie Detection System</h1>
+
+<p>Select how you want to provide the food image</p>
+
+<!-- Upload Image -->
+
+<h2>Upload Image</h2>
+
+<form action="/predict" method="post" enctype="multipart/form-data">
+
+<input
+type="file"
+name="image"
+accept="image/*"
+required>
+
+<br><br>
+
+<button type="submit">Upload & Predict</button>
+
+</form>
+
+<hr>
+
+
+<!-- Mobile Camera -->
+
+<h2>Take Photo</h2>
+
+<form action="/predict" method="post" enctype="multipart/form-data">
+
+<input
+type="file"
+name="image"
+accept="image/*"
+capture="environment"
+required>
+
+<br><br>
+
+<button type="submit">Capture & Predict</button>
+
+</form>
+
+<hr>
+
+
+<!-- Laptop Webcam -->
+
+<div id="webcam-section">
+
+<h2>Or Capture From Laptop Webcam</h2>
+
+<video id="camera" width="400" height="300" autoplay playsinline></video>
+
+<br><br>
+
+<button onclick="capture()">Capture & Predict</button>
+
+</div>
+
+
+<!-- QR Code -->
+
+<div class="qr-box">
+
+<h3>Scan QR to open on Mobile</h3>
+
+<img src="/static/qr.png" width="200">
+
+<p>Scan this QR using your phone to capture food image</p>
+
+</div>
+
+
+<canvas id="snapshot" width="224" height="224" style="display:none;"></canvas>
+
+
+<script>
+
+// detect mobile device
+const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+if(!isMobile){
+
+    const video = document.getElementById("camera");
+
+    async function startCamera(){
+
+        try{
+
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video:true,
+                audio:false
+            });
+
+            video.srcObject = stream;
+
+        }
+        catch(err){
+
+            console.log("Camera error:", err);
+
+        }
+
+    }
+
+    startCamera();
+
+    window.capture = function(){
+
+        const canvas = document.getElementById("snapshot");
+        const context = canvas.getContext("2d");
+
+        context.drawImage(video,0,0,224,224);
+
+        canvas.toBlob(function(blob){
+
+            const formData = new FormData();
+            formData.append("image", blob, "webcam.jpg");
+
+            fetch("/predict",{
+                method:"POST",
+                body:formData
+            })
+            .then(response => response.text())
+            .then(html => {
+
+                document.open();
+                document.write(html);
+                document.close();
+
+            });
+
+        });
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>

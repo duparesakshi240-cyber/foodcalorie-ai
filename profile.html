@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Profile | FoodCal AI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+/* FULL SCREEN */
+body {
+  min-height: 100vh;
+  margin: 0;
+
+  background:
+    radial-gradient(circle at 50% 20%, rgba(34,197,94,0.10), transparent 40%),
+    url("/static/bg_profile2.png") no-repeat center center fixed;
+
+  background-size: cover;
+  background-attachment: fixed;
+
+  font-family: 'Poppins', sans-serif;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 70% 20%, rgba(34,197,94,0.08), transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  pointer-events: none;
+}
+/* NAVBAR */
+.navbar {
+  position: sticky;
+  top: 10px;
+
+  z-index: 1000;
+
+  height: 65px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.75),
+    rgba(240,253,244,0.65)
+  );
+
+  backdrop-filter: blur(14px);
+
+  border-bottom: 1px solid rgba(34,197,94,0.15);
+
+  box-shadow:
+    0 6px 20px rgba(34,197,94,0.08);
+
+  border-radius: 20px;
+  margin: 10px 20px;
+
+  display: flex;
+  align-items: center;
+
+  transition: all 0.3s ease;
+}
+
+.navbar.scrolled {
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.9),
+    rgba(220,252,231,0.8)
+  );
+
+  transform: scale(0.98);
+  border-radius: 18px;
+
+  box-shadow:
+    0 10px 30px rgba(34,197,94,0.18);
+}
+
+.nav-group {
+  display: flex;
+  gap: 4px;
+
+  padding: 6px;
+
+  border-radius: 30px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(240,253,244,0.9),
+    rgba(220,252,231,0.8)
+  );
+
+  border: 1px solid rgba(34,197,94,0.2);
+
+  box-shadow:
+    0 6px 16px rgba(34,197,94,0.12),
+    inset 0 1px rgba(255,255,255,0.6);
+
+  backdrop-filter: blur(10px);
+
+  transition: box-shadow 0.3s ease;
+}
+
+.nav-btn {
+  text-decoration: none;
+
+  padding: 6px 14px;
+  border-radius: 20px;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  color: #2f5d3a;
+  transition: all 0.2s ease;
+
+  position: relative;
+  z-index: 1;
+
+  transition:
+    background 0.25s ease,
+    transform 0.2s ease,
+    box-shadow 0.25s ease,
+    color 0.2s ease;
+}
+
+.nav-group:hover {
+  box-shadow:
+    0 8px 20px rgba(34,197,94,0.18),
+    inset 0 1px rgba(255,255,255,0.7);
+}
+
+.nav-btn:hover {
+  background: rgba(34,197,94,0.15);
+
+  transform: translateY(-2px) scale(1.03);
+
+  box-shadow: 0 4px 10px rgba(34,197,94,0.2);
+}
+
+.nav-btn:active {
+  transform: scale(0.95);
+}
+
+.navbar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.4),
+    transparent
+  );
+
+  pointer-events: none;
+}
+
+.navbar {
+  position: relative;
+  z-index: 10;
+}
+/* LOGO */
+.logo {
+  font-weight: 600;
+  color: #2f5d3a;
+  font-size: 20px;
+}
+
+.nav-btn.active {
+  background: linear-gradient(135deg, #22c55e, #15803d);
+  color: white;
+
+  box-shadow: 0 4px 12px rgba(34,197,94,0.3);
+}
+
+.nav-btn.active:active {
+  transform: scale(0.95);
+}
+
+/* MAIN */
+.main-container {
+  min-height: calc(100vh - 60px);
+  display: flex;
+  flex-direction: column;
+  padding: 10px 40px;
+}
+
+/* HERO */
+.hero {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.hero h1 {
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.highlight {
+  background: linear-gradient(135deg, #6ba96b, #3e7f4f);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero p {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+h6 {
+  font-weight: 600;
+  color: #2f5d3a;
+  letter-spacing: 0.3px;
+}
+
+/* LAYOUT */
+.row { flex: 1; }
+
+/* LEFT */
+.left-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* RIGHT */
+.right-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.right-top { flex-shrink: 0; }
+
+/* CARD */
+.card {
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.75); /* 👈 ADD THIS ONLY */
+  backdrop-filter: blur(14px);
+  padding: 18px;
+  border: 1px solid rgba(255,255,255,0.6);
+
+  box-shadow:
+    0 8px 25px rgba(0,0,0,0.06),
+    inset 0 1px rgba(255,255,255,0.6);
+
+  transition: all 0.25s ease;
+
+  position: relative;
+  z-index: 1;
+}
+
+.right-top .card {
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.92),
+    rgba(240,253,244,0.85)
+  );
+}
+
+/* AVATAR */
+.avatar-wrapper {
+  position: relative;
+  width: 90px;
+  margin: 0 auto 10px;
+}
+
+.avatar-img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 4px solid #e8f0e3;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+}
+
+.edit-icon {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #6ba96b;
+  color: white;
+  font-size: 12px;
+  padding: 4px 6px;
+  border-radius: 50%;
+}
+
+/* HEALTH ITEM */
+.health-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f3f8ef;
+  padding: 12px 14px;
+  border-radius: 16px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(0,0,0,0.03);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.icon {
+  width: 28px;
+  height: 28px;
+  font-size: 13px;
+  background: #f3f8ef;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.label {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2f5d3a;
+}
+
+/* GOAL BOX */
+.goal-box {
+  background: #f3f8ef;
+  padding: 12px;
+  border-radius: 16px;
+}
+
+/* PROGRESS */
+.progress {
+  height: 8px;
+  border-radius: 10px;
+  background: #e6efe6;
+}
+
+
+/* 🌿 CUSTOM TABS */
+.custom-tabs {
+  display: flex;
+  gap: 10px;
+  margin: 12px 0 14px;
+  padding: 6px;
+  background: rgba(255,255,255,0.5);
+  border-radius: 20px;
+  width: fit-content;
+  position: relative;
+}
+
+.tab.active {
+  background: linear-gradient(135deg, #e8f5e9, #d7f0dc);
+
+  color: #2f5d3a;
+  font-weight: 600;
+
+  box-shadow: 0 4px 10px rgba(76,175,80,0.15);
+}
+
+.tab {
+  transition: all 0.2s ease;
+}
+
+.tab:hover {
+  background: rgba(76,175,80,0.08);
+}
+
+.custom-tabs::after {
+  content: "";
+  position: absolute;
+  bottom: 4px;
+  left: 10px;
+
+  width: 60px;
+  height: 4px;
+
+  background: linear-gradient(90deg, #22c55e, #15803d);
+  border-radius: 10px;
+
+  transition: all 0.3s ease;
+}
+
+/* NAV BUTTONS */
+.nav-btn {
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: #f3f8ef;
+  color: #2f5d3a;
+  transition: all 0.2s ease;
+}
+
+..nav-btn:hover {
+  background: rgba(34,197,94,0.1);
+}
+
+.nav-btn.active {
+  background: linear-gradient(135deg, #22c55e, #15803d);
+  color: white;
+
+  box-shadow: 0 4px 10px rgba(34,197,94,0.3);
+}
+
+.btn-success:active {
+  transform: scale(0.97);
+}
+
+/* EDIT BUTTON */
+.edit-btn {
+  border: none;
+  background: #e6f2e6;
+  color: #2f5d3a;
+  font-size: 13px;
+  padding: 5px 12px;
+  border-radius: 14px;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.edit-btn:hover {
+  background: #f3f8ef;
+}
+
+/* THREE DOT BUTTON */
+.more-btn {
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  color: #6c757d;
+  padding: 2px 8px;
+  border-radius: 8px;
+}
+
+.more-btn:hover {
+  background: rgba(0,0,0,0.05);
+}
+
+
+/* 💎 PROFILE CARD SPECIAL */
+.profile-card {
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+/* ✨ HEALTH ITEMS HOVER */
+.health-item {
+  transition: all 0.2s ease;
+}
+
+.health-item:hover {
+  background: #edf7ee;
+}
+
+
+
+/* 🎯 GOAL BAR GLOW */
+.progress-bar {
+  background: linear-gradient(90deg, #66bb6a, #388e3c);
+}
+
+/* 🌈 BUTTON LIFT */
+.btn-success {
+  background: linear-gradient(135deg, #22c55e, #15803d);
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: 0 8px 20px rgba(34,197,94,0.3);
+  transition: all 0.25s ease;
+}
+
+.btn-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(34,197,94,0.4);
+}
+
+/* 🔮 BOTTOM BAR PREMIUM */
+/* 🌿 AI INPUT BAR CONTAINER */
+.bottom-bar {
+  width: 100%;
+  margin-top: 10px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 10px 14px;
+  border-radius: 25px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(240,253,244,0.95),
+    rgba(220,252,231,0.85)
+  );
+
+  border: 1px solid rgba(34,197,94,0.25);
+
+  box-shadow:
+    0 6px 18px rgba(34,197,94,0.12);
+
+  backdrop-filter: blur(10px);
+
+  transition: all 0.25s ease;
+}
+
+.bottom-bar input {
+  border: none;
+  outline: none;
+  background: transparent;
+
+  flex: 1;
+
+  font-size: 14px;
+  color: #2f5d3a;
+}
+
+.bottom-bar input::placeholder {
+  color: #9aa6a0;
+}
+
+.ai-icon {
+  font-size: 16px;
+
+  background: rgba(34,197,94,0.12);
+  padding: 6px;
+  border-radius: 50%;
+}
+
+.bottom-bar:focus-within {
+  border-color: #22c55e;
+
+  box-shadow:
+    0 8px 22px rgba(34,197,94,0.18),
+    0 0 0 2px rgba(34,197,94,0.15);
+}
+
+.send-btn {
+  border: none;
+
+  background: linear-gradient(135deg, #22c55e, #166534);
+  color: white;
+
+  border-radius: 50%;
+  padding: 6px 10px;
+
+  cursor: pointer;
+
+  box-shadow: 0 4px 12px rgba(34,197,94,0.35);
+
+  transition: all 0.2s ease;
+}
+
+/* PROFILE SETTINGS */
+.profile-settings {
+  padding: 18px;
+}
+
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 4px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  font-size: 14px;
+}
+
+.no-border {
+  border-bottom: none;
+}
+
+.setting-row .label {
+  color: #6c757d;
+}
+
+.setting-row .value {
+  font-weight: 600;
+  color: #2f5d3a;
+}
+
+.small-btn {
+  border: none;
+  background: #f3f8ef;
+  padding: 5px 12px;
+  border-radius: 14px;
+  font-size: 12px;
+  color: #2f5d3a;
+  transition: 0.2s;
+}
+
+.small-btn:hover {
+  background: #f3f8ef;
+}
+
+.tab {
+  padding: 6px 16px;
+  border-radius: 16px;
+  font-size: 13px;
+  color: #5c7a64;
+  cursor: pointer;
+
+  border: none;
+  background: transparent;
+}
+
+.custom-tabs {
+  margin-top: 6px;
+}
+
+.bottom-bar input::placeholder {
+  color: #9aa6a0;
+}
+
+.tab-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 5px;
+  padding-bottom: 90px; /* 👈 prevents content hiding behind bar */
+}
+
+.card,
+.health-item,
+.btn-success,
+.nav-btn,
+.tab,
+.bottom-bar input {
+  transition: all 0.2s ease-in-out;
+}
+
+.profile-settings {
+  position: relative;
+  overflow: hidden; /* important */
+}
+
+.profile-settings::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: radial-gradient(
+    circle at 20% 20%,
+    rgba(34,197,94,0.08),
+    transparent 60%
+  );
+
+  pointer-events: none;
+}
+
+.card {
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: radial-gradient(
+    circle at 25% 25%,
+    rgba(34,197,94,0.15),   /* stronger */
+    transparent 65%
+  );
+
+  pointer-events: none;
+}
+
+/* 🌿 Reduce glow for Health Summary */
+.right-top .card::before {
+  background: radial-gradient(
+    circle at 25% 25%,
+    rgba(34,197,94,0.06),  /* lighter */
+    transparent 65%
+  );
+}
+
+.logo-box {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 6px 12px;
+
+  border-radius: 20px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(240,253,244,0.9),
+    rgba(220,252,231,0.7)
+  );
+
+  border: 1px solid rgba(34,197,94,0.2);
+
+  box-shadow:
+    0 4px 10px rgba(34,197,94,0.1),
+    inset 0 1px rgba(255,255,255,0.6);
+
+  backdrop-filter: blur(8px);
+}
+
+.logo-box span {
+  font-weight: 600;
+  font-size: 16px;
+  color: #2f5d3a;
+}
+
+.logo-box {
+  transition: all 0.25s ease;
+}
+
+.logo-box:hover {
+  transform: scale(1.03);
+  box-shadow:
+    0 6px 14px rgba(34,197,94,0.2);
+}
+
+  .leaf-icon {
+  font-size: 18px;
+}
+
+.indicator {
+  position: absolute;
+  bottom: 4px;
+  left: 10px;
+
+  width: 60px;
+  height: 4px;
+
+  background: linear-gradient(90deg, #22c55e, #15803d);
+  border-radius: 10px;
+
+  transition: all 0.3s ease;
+
+  pointer-events: none;   /* 🔥 VERY IMPORTANT */
+  z-index: 0;             /* keep it behind */
+}
+
+button,
+.btn,
+.edit-btn,
+.small-btn {
+  position: relative;
+  z-index: 5;
+}
+
+.edit-input {
+  border: none;
+  background: transparent;
+
+  font-weight: 600;
+  color: #2f5d3a;
+
+  width: auto;
+  min-width: 50px;
+}
+
+.edit-input:focus {
+  outline: none;
+  border-bottom: 2px solid #22c55e;
+}
+</style>
+</head>
+
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar px-4">
+
+  <div class="logo-box">
+  🍃 <span>FoodCal AI</span>
+  </div>
+
+  <div class="ms-auto d-flex gap-2 nav-group">
+    <a href="/home" class="nav-btn">🏠 Home</a>
+    <a href="/dashboard" class="nav-btn">📊 Dashboard</a>
+    <a href="/history" class="nav-btn">📜 History</a>
+    <a href="/profile" class="nav-btn active">👤 Profile</a>
+  </div>
+
+</nav>
+
+<div class="main-container">
+
+<div class="hero">
+  <h1><span class="highlight">Your Profile</span></h1>
+  <p>Manage your account settings, health goals, and preferences</p>
+</div>
+
+<div class="row g-3">
+
+<!-- LEFT -->
+<div class="col-lg-4 left-panel">
+
+<div class="card profile-card">
+  <div class="avatar-wrapper">
+    <img src="/static/avatar.png" onerror="this.src='https://i.pravatar.cc/120'" class="avatar-img">
+    <div class="edit-icon">✏️</div>
+  </div>
+
+  <h5 class="text-center fw-bold mt-2">{{ user.name }}</h5>
+  <button class="btn btn-success w-100 mt-2">Edit Profile</button>
+</div>
+
+<div class="card">
+  <h6>Notifications</h6>
+  <div class="form-check form-switch">
+    <input class="form-check-input" type="checkbox" checked>
+    <label>Enable Notifications</label>
+  </div>
+</div>
+
+<div class="card">
+  <h6>Account Status</h6>
+  <p>Status: Active</p>
+  <p>Member since: 2026</p>
+</div>
+
+<!-- ✅ MOVE HERE -->
+<div class="bottom-bar">
+  <span class="ai-icon">🤖</span>
+  <input placeholder="Ask me about food calories...">
+  <button class="send-btn">➤</button>
+</div>
+
+</div>
+
+<!-- RIGHT -->
+<div class="col-lg-8 right-panel">
+
+<div class="right-top">
+
+<!-- HEALTH SUMMARY -->
+<div class="card">
+  <div class="d-flex justify-content-between align-items-center mb-2">
+
+    <h6 class="mb-0">📊 Health Summary</h6>
+
+    <div class="d-flex align-items-center gap-2">
+      <button class="edit-btn">✏️ Edit</button>
+    </div>
+
+  </div>
+
+  <div class="row">
+    <div class="col-6">
+      <div class="health-item">
+        <div class="icon">🎂</div>
+        <div class="label">Age</div>
+        <input class="edit-input" value="22" disabled>
+      </div>
+
+      <div class="health-item">
+        <div class="icon">⚧</div>
+        <div class="label">Gender</div>
+        <input class="edit-input" value="Female" disabled>
+      </div>
+
+      <div class="health-item">
+        <div class="icon">📧</div>
+        <div class="label">Weight</div>
+        <input id="weight" class="edit-input" value="{{ user.weight or '' }}" disabled>
+      </div>
+    </div>
+
+    <div class="col-6">
+      <div class="health-item">
+        <div class="icon">📏</div>
+        <div class="label">Height</div>
+        <input class="edit-input" value="{{ user.height or '' }}" disabled>
+      </div>
+
+      <div class="health-item">
+        <div class="icon">🏃</div>
+        <div class="label">Activity</div>
+        <input class="edit-input" value="Active" disabled>
+      </div>
+
+      <div class="goal-box">
+        <div class="d-flex justify-content-between">
+          <span>🎯 Goal</span>
+          <span>71%</span>
+        </div>
+
+        <div class="progress mt-2">
+          <div class="progress-bar" style="width:71%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ✅ FIXED TABS -->
+<ul class="custom-tabs nav nav-tabs border-0">
+
+  <div class="indicator"></div>
+
+  <li class="nav-item">
+    <button class="tab active" data-bs-toggle="tab" data-bs-target="#profileTab">
+      Profile
+    </button>
+  </li>
+
+  <li class="nav-item">
+    <button class="tab" data-bs-toggle="tab" data-bs-target="#goalTab">
+      Goals
+    </button>
+  </li>
+
+  <li class="nav-item">
+    <button class="tab" data-bs-toggle="tab" data-bs-target="#prefTab">
+      Preferences
+    </button>
+  </li>
+
+</ul>
+
+</div>
+
+<!-- TAB CONTENT -->
+<div class="tab-scroll tab-content">
+
+<div class="tab-pane fade show active" id="profileTab">
+
+  <!-- PROFILE SETTINGS -->
+  <div class="card profile-settings">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h6 class="mb-0">Profile Settings</h6>
+      <button class="edit-btn">✏️ Edit</button>
+    </div>
+
+    <div class="setting-row">
+      <div class="label">Full Name</div>
+      <input id="name" class="edit-input" value="{{ user.name }}" disabled>
+    </div>
+
+    <div class="setting-row">
+      <div class="label">Email Address</div>
+      <div class="d-flex align-items-center gap-3">
+        <input id="email" class="edit-input" value="{{ user.email }}" disabled>
+        <button class="small-btn">Change</button>
+      </div>
+    </div>
+
+    <div class="setting-row no-border">
+      <div class="label">Password</div>
+      <div class="d-flex align-items-center gap-3">
+        <input class="edit-input" type="password" value="12345678" disabled>
+        <button class="small-btn">Change</button>
+      </div>
+    </div>
+
+  </div>
+
+</div> <!-- END profileTab -->
+
+<div class="tab-pane fade" id="goalTab">
+
+  <div class="card">
+
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h6>Health Goals</h6>
+      <button class="edit-btn">Edit</button>
+    </div>
+
+    <div class="setting-row">
+      <span>Goal Type</span>
+      <strong>Maintain Weight</strong>
+    </div>
+
+    <div class="setting-row">
+      <span>Daily Calories</span>
+      <strong>1800 kcal</strong>
+    </div>
+
+    <div class="setting-row">
+      <span>Target Weight</span>
+      <strong>55 kg</strong>
+    </div>
+
+
+    <!-- PROGRESS -->
+    <div class="mt-3">
+      <div class="d-flex justify-content-between">
+        <span>Progress</span>
+        <span>71%</span>
+      </div>
+      <div class="progress mt-1">
+        <div class="progress-bar" style="width:71%"></div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="tab-pane fade" id="prefTab">
+
+  <div class="card">
+
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h6>Preferences</h6>
+      <button class="edit-btn">Edit</button>
+    </div>
+
+    <div class="setting-row">
+      <span>Diet Type</span>
+      <strong>Vegetarian</strong>
+    </div>
+
+    <div class="setting-row">
+      <span>Measurement Units</span>
+      <strong>kg / cm</strong>
+    </div>
+
+
+    <div class="setting-row">
+      <span>Allergies</span>
+      <strong>None</strong>
+    </div>
+
+    <div class="setting-row no-border">
+      <span>Theme</span>
+      <strong>Light Mode</strong>
+    </div>
+
+  </div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+</div>
+
+<!-- ✅ REQUIRED FOR TABS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  window.addEventListener("scroll", function () {
+    const navbar = document.querySelector(".navbar");
+
+    if (window.scrollY > 20) {
+      navbar.classList.add("scrolled");
+    } else {
+      navbar.classList.remove("scrolled");
+    }
+  });
+
+</script>
+
+<script>
+  const tabs = document.querySelectorAll(".tab");
+  const indicator = document.querySelector(".indicator");
+
+  function moveIndicator(tab) {
+    const tabRect = tab.getBoundingClientRect();
+    const parentRect = tab.closest(".custom-tabs").getBoundingClientRect();
+
+    indicator.style.left = (tabRect.left - parentRect.left) + "px";
+    indicator.style.width = tabRect.width + "px";
+  }
+
+  // initial position
+  const activeTab = document.querySelector(".tab.active");
+  if (activeTab) moveIndicator(activeTab);
+
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      moveIndicator(tab);
+    });
+  });
+</script>
+
+<script>
+  document.querySelectorAll(".profile-settings .edit-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+
+    const inputs = document.querySelectorAll(".profile-settings .edit-input");
+    let editing = btn.classList.toggle("editing");
+
+    if (!editing) {
+      // 🔥 SAVE DATA
+      const data = {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        height: document.getElementById("height").value,
+        weight: document.getElementById("weight").value
+      };
+
+      fetch("/update-profile", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
+    }
+
+    inputs.forEach(input => {
+      input.disabled = !editing;
+    });
+
+    btn.textContent = editing ? "💾 Save" : "✏️ Edit";
+  });
+});
+</script>
+
+<script>
+  document.querySelectorAll(".edit-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const card = btn.closest(".card");
+
+      const inputs = card.querySelectorAll(".edit-input");
+
+      const isEditing = btn.classList.toggle("editing");
+
+      inputs.forEach(input => {
+        input.disabled = !isEditing;
+      });
+
+      btn.textContent = isEditing ? "💾 Save" : "✏️ Edit";
+    });
+  });
+</script>
+
+</body>
+</html>

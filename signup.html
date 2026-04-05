@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Food Calorie AI - Sign Up</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+/* SAME CSS AS LOGIN PAGE (NO CHANGE) */
+
+body{
+height:100vh;
+margin:0;
+font-family:'Segoe UI',sans-serif;
+
+background: url('/static/bg_signup.jpeg') no-repeat center center;
+background-size:cover;
+background-position:center;
+
+display:flex;
+justify-content:center;
+align-items:center;
+overflow:hidden;
+}
+
+.login-card{
+width:460px;
+padding:50px;
+border-radius:28px;
+
+background:rgba(255,255,255,0.25);
+backdrop-filter:blur(20px);
+
+border:1px solid rgba(255,255,255,0.45);
+box-shadow: 0 20px 50px rgba(255,122,0,0.15);
+
+text-align:center;
+z-index:2;
+}
+
+.login-btn:active{
+transform:scale(0.96);
+}
+
+
+.logo-header{
+width:100%;
+height:180px;
+border-radius:18px;
+overflow:hidden;
+background:linear-gradient(135deg,#ffffff,#f7f2ee);
+margin-bottom:25px;
+box-shadow:0 12px 30px rgba(0,0,0,0.25);
+}
+
+.logo-header img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.subtitle{
+font-size:16px;
+color:#5A3A2C;
+margin-bottom:25px;
+}
+
+.signup{
+margin-top:18px;
+color:#5A3A2C;
+}
+
+
+.login-card:hover{
+transform:translateY(-3px);
+transition:0.3s;
+}
+
+.signup a{
+color:#E63946;
+font-weight:600;
+text-decoration:none;
+}
+
+.signup a:hover{
+text-decoration:underline;
+}
+
+.input-group-text {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1.5px solid rgba(90, 58, 44, 0.3);
+    border-right: none;
+
+    border-radius: 12px 0 0 12px;
+    color: #5A3A2C;
+}
+.input-group-text:last-child {
+    border-left: none;
+    border-right: 1.5px solid rgba(90, 58, 44, 0.3);
+    border-radius: 0 12px 12px 0;
+    cursor: pointer;
+}
+
+.form-control {
+    background: rgba(255, 255, 255, 0.65);
+    border: 1.5px solid rgba(90, 58, 44, 0.3);  /* 👈 visible border */
+    border-radius: 12px;
+    padding: 12px;
+
+    color: #3A2A22;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    background: rgba(255, 255, 255, 0.9);
+   border-color: var(--primary);
+box-shadow: 0 0 10px rgba(255,122,0,0.3);
+    outline: none;
+}
+
+.form-control:hover {
+    border-color: #E63946;
+}
+
+.login-btn {
+    background: linear-gradient(135deg, #FF7A00, #FFB347); /* orange gradient */
+    border: none;
+    padding: 12px;
+    width: 100%;
+    border-radius: 12px;
+
+    color: white;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+
+    box-shadow: 0 6px 20px rgba(255, 122, 0, 0.4);
+    transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 10px 30px rgba(255, 122, 0, 0.6);
+
+    background: linear-gradient(135deg, #FF8C1A, #FFC266);
+}
+
+/* emojis same */
+.food{
+position:absolute;
+font-size:42px;
+opacity:0.9;
+animation:float 7s infinite ease-in-out;
+z-index:1;
+}
+
+@keyframes float{
+0%{transform:translateY(0)}
+50%{transform:translateY(-40px)}
+100%{transform:translateY(0)}
+}
+
+body{
+    background: url('/static/bg_signup.jpeg') no-repeat center center;
+    background-size: cover;
+}
+  /* Floating Input Container */
+.floating-group {
+    position: relative;
+    margin-bottom: 25px;
+}
+
+/* Input Field */
+.floating-group input {
+    width: 100%;
+    padding: 14px 14px 14px 40px;
+
+    border-radius: 12px;
+    border: 1.5px solid rgba(90, 58, 44, 0.3);
+
+    background: rgba(255,255,255,0.65);
+    outline: none;
+
+    transition: 0.3s;
+}
+
+/* Icon */
+.floating-group .icon {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    color: #5A3A2C;
+}
+
+/* Label */
+.floating-group label {
+    position: absolute;
+    left: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #7a5a4d;
+    font-size: 14px;
+    pointer-events: none;
+
+    transition: 0.3s;
+}
+
+/* Floating Effect */
+.floating-group input:focus + label,
+.floating-group input:valid + label {
+    top: -8px;
+    left: 30px;
+    font-size: 12px;
+    background: white;
+    padding: 0 5px;
+    color: var(--primary);
+}
+
+/* Focus Glow */
+.floating-group input:focus {
+    border-color: #E63946;
+    box-shadow: 0 0 10px rgba(230,57,70,0.3);
+}
+
+/* Password Strength Bar */
+.strength-meter {
+    height: 6px;
+    border-radius: 10px;
+    background: #eee;
+    margin-top: -10px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+#strengthBar {
+    height: 100%;
+    width: 0%;
+    transition: 0.3s;
+}
+  :root {
+    --primary: #FF7A00;       /* main orange */
+    --primary-dark: #E56700;  /* hover */
+    --light-orange: #FFF3E6;  /* background tint */
+    --border-orange: #FFD1A3; /* soft border */
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+
+<!-- CARD -->
+<div class="login-card">
+
+<div class="logo-header">
+<img src="{{ url_for('static', filename='logo2.png') }}" alt="logo">
+</div>
+
+<div class="subtitle">
+Create your account
+</div>
+<form action="/signup" method="POST">
+
+<!-- NAME -->
+<div class="floating-group">
+    <i class="fa fa-user icon"></i>
+    <input type="text" name="name" required>
+    <label>Full Name</label>
+</div>
+
+<!-- EMAIL -->
+<div class="floating-group">
+    <i class="fa fa-envelope icon"></i>
+    <input type="email" name="email" required>
+    <label>Email Address</label>
+</div>
+
+<!-- PASSWORD -->
+<div class="floating-group">
+    <i class="fa fa-lock icon"></i>
+    <input type="password" id="password" name="password" required>
+    <label>Password</label>
+</div>
+
+<!-- PASSWORD STRENGTH -->
+<div class="strength-meter">
+    <div id="strengthBar"></div>
+</div>
+
+<!-- CONFIRM PASSWORD -->
+<div class="floating-group">
+    <i class="fa fa-lock icon"></i>
+    <input type="password" id="confirmPassword" name="confirmPassword" required>
+    <label>Confirm Password</label>
+</div>
+
+<button type="submit" class="login-btn">Register</button>
+
+</form>
+<div class="signup">
+Already have an account?
+<a href="/login">Login</a>
+</div>
+
+</div>
+
+<script>
+
+function togglePassword(){
+let pass = document.getElementById("password");
+pass.type = pass.type === "password" ? "text" : "password";
+}
+
+
+const pass = document.getElementById("password");
+const confirm = document.getElementById("confirmPassword");
+
+confirm.addEventListener("input", function(){
+
+if(pass.value !== confirm.value){
+    confirm.style.border = "2px solid #E63946";
+}else{
+    confirm.style.border = "2px solid #4CAF50";
+}
+
+});
+
+
+</script>
+<script>
+
+const password = document.getElementById("password");
+const strengthBar = document.getElementById("strengthBar");
+
+password.addEventListener("input", function() {
+    let val = password.value;
+    let strength = 0;
+
+    if (val.length > 5) strength += 25;
+    if (val.match(/[A-Z]/)) strength += 25;
+    if (val.match(/[0-9]/)) strength += 25;
+    if (val.match(/[@$!%*?&]/)) strength += 25;
+
+    strengthBar.style.width = strength + "%";
+
+   if (strength < 50) {
+    strengthBar.style.background = "#ffb74d";  // light orange
+} else if (strength < 75) {
+    strengthBar.style.background = "#ff9800";  // medium
+} else {
+    strengthBar.style.background = "#E65100";  // strong
+}
+});
+
+</script>
+</body>
+</html>

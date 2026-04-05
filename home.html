@@ -1,0 +1,3395 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Food Calorie AI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- YOUR CSS (must be below Bootstrap) -->
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<!-- Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+body {
+    background: url("{{ url_for('static', filename='bg3.png') }}") no-repeat center/cover;
+    font-family: 'Segoe UI', sans-serif;
+     overflow-x: hidden;
+}
+
+/* Glass effect */
+.glass {
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(16px);
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.glass {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    padding: 20px;
+}
+/* Navbar */
+.navbar {
+    background: rgba(255,255,255,0.8);
+    backdrop-filter: blur(10px);
+    margin-top: 20px;
+}
+
+/* Hero */
+.hero {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.hero h1 {
+    font-weight: 700;
+}
+
+.hero span {
+    color: #ff6b00;
+}
+
+/* Buttons */
+.btn-orange {
+    background: linear-gradient(45deg, #ff7b00, #ff3d00);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 10px 20px;
+}
+
+.btn-light-custom {
+    background: #f1f1f1;
+    border-radius: 30px;
+}
+
+/* Image preview */
+#preview {
+    width: 100%;
+    max-height: 250px;
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+/* Progress bars */
+.progress {
+    height: 8px;
+    border-radius: 10px;
+}
+
+    /* Force remove default link style */
+.menu-item {
+    text-decoration: none !important;
+    color: #333 !important;
+    padding: 8px 18px;
+    border-radius: 25px;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+/* Stylish HOME button */
+.menu-item.active {
+    background: linear-gradient(45deg, #ff7b00, #ff3d00);
+    color: white !important;
+    box-shadow: 0 4px 10px rgba(255, 107, 0, 0.4);
+}
+
+/* Hover effect */
+.menu-item:hover {
+    background: rgba(255, 107, 0, 0.1);
+    color: #ff6b00 !important;
+}
+/* Toggle Button */
+.toggle-btn {
+    border: none;
+    background: #f1f1f1;
+    border-radius: 50%;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.toggle-btn:hover {
+    background: #ddd;
+}
+
+/* DARK MODE */
+.dark-mode {
+    background: #121212 !important;
+    color: #fff !important;
+}
+
+/* Dark Cards */
+.dark-mode .glass {
+    background: rgba(30, 30, 30, 0.9);
+    color: #fff;
+}
+
+/* Navbar Dark */
+.dark-mode .navbar {
+    background: rgba(20, 20, 20, 0.9);
+}
+
+/* Text Fix */
+.dark-mode p,
+.dark-mode h1,
+.dark-mode h5 {
+    color: #fff;
+}
+
+/* Buttons */
+.dark-mode .btn-light-custom {
+    background: #333;
+    color: white;
+}
+
+    .glass img {
+    border-radius: 15px;
+}
+/* Move button section slightly up */
+.upload-section {
+    margin-top: -10px;   /* adjust if needed (-5px / -15px) */
+}
+
+/* Align QR nicely */
+.qr-box {
+    margin-top: 0;
+}
+
+    .btn-orange,
+.btn-light-custom {
+    padding: 14px 32px;
+    font-size: 17px;
+}
+
+    .btn-orange {
+    background: linear-gradient(45deg, #ff7b00, #ff3d00);
+    color: white;
+}
+
+.btn-light-custom {
+    background: #e9ecef;
+}
+
+    .btn-orange {
+    background: linear-gradient(45deg, #ff7b00, #ff3d00);
+    color: white;
+}
+
+.btn-light-custom {
+    background: #e9ecef;
+}
+    /* Add gap between Upload & Camera */
+.compact-row .btn-orange {
+    margin-right: 10px;
+}
+/* Card style */
+.food-card {
+    background: rgba(255, 255, 255, 0.2); /* light transparent */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.3);
+
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+}
+.food-card .mt-2 h6 {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 2px;
+}
+
+.food-card .mt-2 p {
+    font-size: 0.2rem;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+/* Image */
+.food-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+}
+
+/* Confidence badge */
+.confidence-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #ffffff;
+    border-radius: 50px;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    z-index: 10;
+}
+
+.confidence-badge i {
+    color: #28a745; /* green check */
+    font-size: 0.9rem;
+}
+
+/* Remove button */
+
+
+.remove-btn {
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    background: #fefefe;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.remove-btn:hover {
+    background: #f7f7f7;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+/* Nutrition mini row */
+.nutrition-mini {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-size: 0.85rem;
+    color: #444;
+}
+
+/* Container for each nutrient */
+.nutrition-mini span {
+    background: #e0cfa6; /* slightly darker than card background */
+    border-radius: 12px;
+    padding: 5px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 60px;
+    height : 50 px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+/* Bold nutrient value */
+.nutrition-mini b {
+    font-weight: 600;
+    margin-top: 2px;
+}
+
+/* Hover effect */
+.nutrition-mini span:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+    cursor: pointer;
+}
+.nutrition-card {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-radius: 15px;
+    padding: 15px;
+
+    /* texture */
+    background-image: radial-gradient(#dee2e6 1px, transparent 1px);
+    background-size: 12px 12px;
+
+    /* 🔥 NEW BORDER */
+    border: 1px solid #dee2e6;
+    border: 1px solid #dee2e6;
+box-shadow: 0 0 10px rgba(13, 110, 253, 0.2);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+}
+    .food-img {
+    width: 100%;
+    height: auto;
+}
+.position-relative {
+    position: relative;
+}
+
+/* Glow border around image */
+.food-img {
+    border: 3px solid #f7c873; /* warm golden border */
+}
+
+/* Glow effect */
+.position-relative::after {
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border-radius: 20px;
+    background: linear-gradient(45deg, #f7c873, #ff9a3c, #f7c873);
+    z-index: -1;
+    filter: blur(10px);
+    opacity: 0.4;
+}
+
+/* Scanner Line */
+.scanner-line {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(to right, transparent, #00ffcc, transparent);
+    animation: scan 2s infinite;
+}
+
+/* Animation */
+@keyframes scan {
+    0% {
+        top: 0%;
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    50% {
+        top: 100%;
+        opacity: 1;
+    }
+    100% {
+        top: 0%;
+        opacity: 0;
+    }
+}
+    .detection-container {
+    position: relative;
+}
+
+/* Dark overlay */
+.overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.2);
+    top: 0;
+    left: 0;
+    border-radius: 15px;
+    display: none; /* hidden by default */
+    z-index: 4;
+}
+
+/* Scanner line */
+.scanner-line {
+    position: absolute;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(to right, transparent, #00ffcc, transparent);
+    animation: scan 2s infinite;
+    /*display: none; hidden by default */
+    z-index: 6;
+}
+
+@keyframes scan {
+    0% { top: 0%; }
+    50% { top: 100%; }
+    100% { top: 0%; }
+}
+
+/* Detection Box */
+.detection-box {
+    position: absolute;
+    top: 3%;
+    left: 3%;
+    width: 100%;
+    height: 100%;
+    border: 2px solid rgba(0,255,200,0.6);
+    animation: pulse 1.5s infinite;
+}
+
+/* Corner styling */
+.corner {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #00ffcc;
+}
+
+/* Corners position */
+.top-left { top: -3px; left: -3px; border-right: none; border-bottom: none; }
+.top-right { top: -3px; right: -3px; border-left: none; border-bottom: none; }
+.bottom-left { bottom: -3px; left: -3px; border-right: none; border-top: none; }
+.bottom-right { bottom: -3px; right: -3px; border-left: none; border-top: none; }
+
+/* Pulse animation */
+@keyframes pulse {
+    0% { box-shadow: 0 0 5px #00ffcc; }
+    50% { box-shadow: 0 0 20px #00ffcc; }
+    100% { box-shadow: 0 0 5px #00ffcc; }
+}
+    .progress-bar {
+    transition: width 1s ease-in-out;
+}
+    #addLogBtn {
+    background: rgba(255, 122, 24, 0.8);
+    backdrop-filter: blur(8px);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 20px;
+}
+
+    #viewLogBtn {
+    background: linear-gradient(45deg, #ff7a18, #ffb347);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    transition: 0.3s;
+}
+
+#viewLogBtn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(255, 122, 24, 0.4);
+}
+.summary-card.common-card {
+    background: transparent !important;
+    background-position:left;
+}
+    /* Summary Card Styling */
+.summary-card {
+    background: #fff8f0;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+/* Horizontal Intake Bar */
+.intake-bar {
+    width: 100%;
+    height: 8px;
+    background: #f0e4d8;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.intake-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #fcd34d, #16a34a);
+    border-radius: 10px;
+    transition: width 1s ease;
+}
+    /* Floating Icons */
+.float-icon {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    opacity: 0.9;
+    animation: float 4s ease-in-out infinite;
+}
+
+.icon1 { top: -5px; left: 10px; animation-d0lay: 0s; }
+.icon2 { bottom: 0; right: 15px; animation-delay: 0.5s; }
+.icon3 {  top: 50%; /* center vertically */
+    left: 100%; /* align at the right edge of the circle */
+    transform: translate(-50%, -50%); animation-delay: 1s; }
+.icon4 { bottom: 15px; left: 5px; animation-delay: 1.5s; }
+.icon5 { top: -7px; right: 1px; animation-delay: 2s; }
+
+
+/* Floating Animation */
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(15deg); }
+}
+
+    /* Notifications Card Styling */
+.notifications-card {
+            /* soft light card color */
+    border-radius: 20px;           /* rounded corners */
+
+    padding: 1rem;                 /* internal spacing */
+}
+
+/* Top bar: heading + notification count */
+.notifications-card h6 {
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+/* Notification item layout */
+.notification-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;  /* space between text & image */
+     opacity: 1;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+    position: relative; /* for stickers */
+}
+.notification-stickers {
+    position: absolute;
+    right: 0;
+    bottom: 5;
+    display: flex;
+    gap: -10px; /* overlap stickers */
+    pointer-events: none; /* they won’t block clicks */
+}
+
+.notification-wrapper {
+    width: 100%;
+    overflow: hidden;
+}
+
+.notification-slider {
+    display: flex;
+    transition: transform 0.6s ease-in-out;
+}
+
+.notification-item {
+    min-width: 100%;
+    padding: 10px;
+}
+.sticker {
+    width: 150px;
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+    transform: rotate(-10deg);
+    transition: transform 0.3s ease;
+}
+/* Optional: hover pop animation */
+.sticker:hover {
+    transform: rotate(0deg) scale(1.1);
+}
+/* Individual sticker rotations for natural look */
+.sticker1 { transform: rotate(-15deg); }
+.sticker2 { transform: rotate(5deg); }
+.sticker3 { transform: rotate(-5deg); }
+
+
+/* Notification fade effect */
+.notification-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out; /* smooth fade */
+}
+/* Text styling inside notification */
+.notification-text h6 {
+    font-size: 0.95rem;
+}
+
+.notification-text p {
+    font-size: 0.85rem;
+    margin: 0;                     /* remove default margins */
+}
+
+/* Image styling */
+.notification-img  {
+    width: 90px;                    /* small thumbnail */
+    height: 90px;
+    object-fit: cover;
+    border-radius: 15px;            /* rounded edges */
+}
+}
+
+    #results {
+    background: white;
+    border-radius: 10px;
+    margin-top: 10px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+
+   .search-box {
+    position: relative;
+    overflow: visible !important;  /* 🔥 THIS FIXES SCROLL BLOCK */
+}
+
+#results {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    width: 100%;
+
+    background: #fffaf5;
+    border: 1px solid #ffd9b3;
+    border-radius: 12px;
+
+    max-height: 180px;
+    overflow-y: auto;
+
+    z-index: 9999;
+
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+
+    pointer-events: auto;  /* IMPORTANT */
+}
+    .result-item {
+    padding: 10px 15px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.result-item:hover {
+    background: #ffe6cc;
+}
+    #foodDetails {
+    margin-top: 60px;
+}
+    #results {
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+    .notification-item {
+    transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.slide-out {
+    transform: translateX(-50px);
+    opacity: 0;
+}
+
+.slide-in {
+    transform: translateX(50px);
+    opacity: 0;
+}
+
+   .glass {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+
+    /* Background Image */
+    background: url('/static/bg3.png') no-repeat left center;
+    background-size: cover;
+
+    /* Glass effect overlay */
+    background-color: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(10px);
+
+    padding: 10px;
+}
+    .glass::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+
+    background: url('/static/bg.png'); /* optional */
+    opacity: 0.05;
+
+    pointer-events: none;
+}
+    .btn-orange {
+    background: linear-gradient(135deg, #ff7a00, #ff3d00);
+    border: none;
+    color: white;
+    border-radius: 12px;
+    font-weight: 500;
+
+    transition: all 0.3s ease;
+}
+
+.btn-orange:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(255, 100, 0, 0.4);
+}
+    .compact-row > * {
+    margin-right: 10px;
+}
+
+.compact-row > *:last-child {
+    margin-right: 0;
+}
+    .notifications-card {
+    background: none !important;
+}
+    .common-card {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+
+    background: url('/static/bg-card.png') center/cover no-repeat;
+     background-image: url('/static/bg3.png') !important;
+    background-size: cover !important;
+    background-position: center !important;
+}
+
+.common-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.75);
+    z-index: 0;
+}
+
+.common-card > * {
+    position: relative;
+    z-index: 1;
+}
+ .notifications-card.common-card,
+.summary-card.common-card {
+    background: url('/static/bg3.png') center/cover no-repeat !important;
+}
+/* Nutrition box */
+.nutrition-summary {
+    background: rgba(255,255,255,0.2);
+    padding: 10px;
+    border-radius: 15px;
+
+/* =========================
+   THALI CARD (PREMIUM LOOK)
+========================= */
+.thali-card {
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+
+    background: rgba(255, 255, 255, 0.38);
+    border: 1px solid rgba(255,255,255,0.45);
+
+    border-radius: 28px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.10);
+
+    color: #333;
+    margin-top: 10px;
+    animation: slideDown 0.6s ease forwards;
+
+    position: relative;
+    overflow: hidden;
+}
+
+/* subtle decorative glow */
+.thali-card::before {
+    content: "";
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    top: -70px;
+    left: -70px;
+    background: radial-gradient(circle, rgba(255,180,80,0.18), transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.thali-card::after {
+    content: "";
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    bottom: -50px;
+    right: -50px;
+    background: radial-gradient(circle, rgba(255,120,0,0.12), transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+ /* Brass Thali Image */
+   background: url('/static/brass-thali.png') no-repeat center;
+   background-size: cover;
+}
+
+/* Hover */
+.thali-food:hover {
+    transform: scale(1.2);
+}
+/* =========================
+   EMPTY SPACE IMAGE LAYER
+========================= */
+.thali-empty-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    z-index: -1;
+    border-radius: 25px;
+
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    backdrop-filter: blur(2px);   /* earlier 10–14px → too much */
+    backdrop-filter: none;
+    opacity: 0.85; /* make visible */
+}
+
+/* Soft white fade on image */
+.thali-empty-bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 25px;
+    background: rgba(255,255,255,0.30); /* reduced so image can show */
+}
+/* =========================
+   REAL THALI PLATE (IMPORTANT)
+========================= */
+.thali-plate-real {
+    width: 320px;
+    height: 320px;
+    position: relative;
+
+    background: url('/static/brass-thali.png') no-repeat center;
+    background-size: contain;
+     transform: scale(1.20);   /* increase size */
+    transform-origin: center;
+
+    /* Depth + realism */
+    filter: drop-shadow(0 15px 30px rgba(0,0,0,0.35));
+
+    /* subtle shine */
+    overflow: visible;
+    z-index: 1;   /* 🔥 add this */
+
+}
+
+.thali-plate-real::after {
+    content: "";
+    position: absolute;
+    top: 20px;
+    left: 40px;
+    width: 200px;
+    height: 120px;
+    background: radial-gradient(circle, rgba(255,255,255,0.25), transparent);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+/* Thali section inner design */
+.thali-plate-wrapper {
+    position: relative;
+    min-height: 420px;
+    border-radius: 24px;
+     justify-content: center;
+    align-items: center;
+    background:
+        radial-gradient(circle at top left, rgba(255, 193, 7, 0.10), transparent 30%),
+        radial-gradient(circle at top right, rgba(255, 87, 34, 0.10), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(255, 152, 0, 0.08), transparent 30%),
+        rgba(200,200,200,0.10);
+
+    padding: 20px;
+}
+
+/* Optional Indian pattern look */
+.thali-plate-wrapper::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 24px;
+    opacity: 0.06;
+    background: url('/static/bg3.png') center/cover no-repeat;
+    pointer-events: none;
+}
+
+/* Decorative food emojis / icons */
+.thali-decor {
+    position: absolute;
+    font-size: 22px;
+    opacity: 0.18;
+    animation: floatDecor 4s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.decor1 { top: 20px; left: 20px; }
+.decor2 { top: 50px; right: 25px; animation-delay: 1s; }
+.decor3 { bottom: 80px; left: 30px; animation-delay: 2s; }
+.decor4 { bottom: 30px; right: 30px; animation-delay: 3s; }
+
+@keyframes floatDecor {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-8px) rotate(8deg); }
+}
+/* =========================
+   FOOD ITEMS (IMAGES)
+========================= */
+.thali-food {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 2;
+    padding: 6px;
+    border-radius: 0;
+    /* Real bowl shadow */
+    box-shadow:none;
+
+    background:none;
+
+    padding: 8px; /* makes food sit inside bowl */
+    transition: all 0.3s ease;
+}
+
+/* CENTER (Rice) */
+.center-rice {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 160px;
+    height: 160px;
+    z-index: 3;
+}
+
+/* TOP (Chapati) */
+.thali-food[data-item="chapati"] {
+    top: 10px;
+    left: 50%;
+    width: 160px;
+    height: 160px;
+    transform: translateX(-50%);
+}
+
+/* TOP LEFT (Salad) */
+.thali-food[data-item="salad"] {
+    top: 60px;
+    left: 10px;
+}
+
+/* TOP RIGHT (Sweet) */
+.thali-food[data-item="sweet"] {
+    top: 60px;
+    right: 10px;
+    width: 130px;
+    height: 130px;
+}
+
+/* BOTTOM LEFT (Veg) */
+.thali-food[data-item="veg"] {
+    bottom: 60px;
+    left: 10px;
+}
+
+/* BOTTOM RIGHT (Dal) */
+.thali-food[data-item="dal"] {
+    bottom: 60px;
+    right: 10px;
+}
+
+/* BOTTOM (Paneer) */
+.thali-food[data-item="paneer"] {
+    bottom: 10px;
+    left: 50%;
+     width: 150px;
+    height: 150px;
+    transform: translateX(-50%);
+}
+/* =========================
+   HOVER + ACTIVE
+========================= */
+.thali-food:hover {
+    transform: scale(1.15);
+}
+
+.thali-food.active {
+    transform: scale(1.2);
+    filter: drop-shadow(0 0 10px #ff9800);
+}
+
+.cal-label {
+    position: absolute;
+    top: -10;
+    left: 10;
+    transform: translate(-50%, -50%);  /* keep this simple */
+
+    background: rgba(0,0,0,0.75);
+    color: #fff;
+
+    font-size: 12px;
+    padding: 2px 6px;
+
+
+    border-radius: 5px;
+    white-space: nowrap;
+
+    z-index: 10;
+}
+.cal-label:hover {
+    transform: scale(1.08);
+    box-shadow:
+        0 6px 18px rgba(0,0,0,0.35),
+        0 0 8px rgba(255, 87, 34, 0.4);
+}
+#label-chapati {
+    transform: translate(-50%, -50%) translateY(23px);
+}
+#label-rice {
+    transform: translate(-50%, -50%) translateY(23px);
+}
+#label-dal {
+    transform: translate(-50%, -50%) translateY(23px);
+}
+#label-sweet {
+    transform: translate(-50%, -50%) translateY(23px);
+}
+
+#label-veg {
+    transform: translate(-50%, -50%) translateY(23px);
+}
+
+#label-paneer{
+    transform: translate(-50%, -50%) translateY(23px);
+}
+
+#label-salad {
+    transform: translate(-50%, -50%) translateY(23px);
+}
+/* 🍞 Chapati (center top) */
+.label-chapati {
+    top: 34%;
+    left: 50%;
+}
+
+/* 🍚 Rice (center) */
+.label-rice {
+    top: 55%;
+    left: 52%;
+}
+
+/* 🥗 Salad (left) */
+.label-salad {
+    top: 45%;
+    left: 28%;
+}
+
+/* 🍛 Paneer (bottom-left) */
+.label-paneer {
+    top: 68%;
+    left: 35%;
+}
+
+/* 🍲 Dal (bottom-right) */
+.label-dal {
+    top: 68%;
+    left: 68%;
+}
+
+/* 🍮 Sweet (right top bowl) */
+.label-sweet {
+    top: 45%;
+    left: 75%;
+}
+
+/* 🥣 Extra top label (if that 120 kcal is global) */
+.label-top {
+    top: 18%;
+    left: 52%;
+}
+
+/* 🥘 Right upper curry (150 kcal one) */
+.label-curry {
+    top: 30%;
+    left: 72%;
+}
+/* =========================
+   ITEM DETAILS
+========================= */
+.glass-inner {
+    background: rgba(255,255,255,0.2);
+    border-radius: 15px;
+    backdrop-filter: none;
+
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+    .thali-plate-real {
+        width: 260px;
+        height: 260px;
+    }
+}
+
+    .center-rice {
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%); /* perfect center */
+
+    width: 140px;   /* bigger than others */
+    height: 140px;
+
+    z-index: 3; /* above everything */
+}
+
+    /* 🔥 Thali Buttons */
+.thali-btn {
+    position: relative;
+
+    padding: 8px 18px;
+    border-radius: 25px;
+
+    border: none;
+    cursor: pointer;
+
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+
+    color: #555;
+    background: rgba(255,255,255,0.7);
+
+    backdrop-filter: blur(8px);
+
+    transition: all 0.3s ease;
+
+    box-shadow:
+        inset 0 1px 2px rgba(255,255,255,0.6),
+        0 3px 8px rgba(0,0,0,0.08);
+}
+.thali-btn[data-thali="indian"].active {
+    border-color: #ff5722;
+}
+
+.thali-btn[data-thali="rajasthani"].active {
+    border-color: #e67e22;
+}
+
+.thali-btn[data-thali="south"].active {
+    border-color: #27ae60;
+}
+
+.thali-btn[data-thali="bengali"].active {
+    border-color: #8e44ad;
+}
+
+.thali-btn[data-thali="maharashtrian"].active {
+    border-color: #2980b9;
+}
+/* Hover */
+.thali-btn:hover {
+    transform: translateY(-2px) scale(1.05);
+
+    box-shadow:
+        0 6px 14px rgba(0,0,0,0.15),
+        0 0 10px rgba(255,122,24,0.3);
+}
+.thali-btn.active {
+    color: #ff5722;   /* 🔥 text visible */
+
+    background: linear-gradient(
+        135deg,
+        rgba(255, 122, 24, 0.15),
+        rgba(255, 179, 71, 0.25)
+    );
+
+    border: 1.5px solid rgba(255, 122, 24, 0.4);
+
+    box-shadow:
+        0 4px 10px rgba(255, 122, 24, 0.25);
+
+    transform: scale(1.05);
+}
+
+.thali-btn::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -60%;
+
+    width: 50%;
+    height: 100%;
+
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255,255,255,0.6),
+        transparent
+    );
+
+    transform: skewX(-20deg);
+}
+    /* Fade Out */
+.fade-out {
+    opacity: 0;
+    transform: scale(0.95);
+    transition: all 0.3s ease;
+}
+
+/* Fade In */
+.fade-in {
+    opacity: 1;
+    transform: scale(1);
+    transition: all 0.3s ease;
+}
+/* 🌟 Background Wrapper */
+.app-background {
+    position: relative;
+    border-radius: 30px;
+    overflow: hidden;
+    padding: 14px;
+    transition: all 0.5s ease;
+    filter: brightness(1) contrast(1);
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+
+    /* fallback warm gradient */
+    background: linear-gradient(135deg, #fff6ec, #ffe6cc, #fffaf4);
+
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+}
+
+/* Soft overlay for readability */
+.app-background::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+/* Decorative texture layer */
+.app-background::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.10;
+    background: url('/static/bg3.png') center/cover no-repeat;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+}
+
+/* Keep content above overlay */
+.app-background > * {
+    position: relative;
+    z-index: 1;
+}
+.thali-category-card {
+  background: rgba(255, 255, 255, 0.22);  /* translucent white */
+  border: 1px solid rgba(255, 255, 255, 0.35); /* soft white border */
+  border-radius: 16px;
+
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);  /* depth */
+  padding: 10px 20px;
+}
+    /* =========================
+   REGION BACKGROUNDS
+========================= */
+
+.bg-indian {
+    background: url('/static/thali.jpeg') center/cover no-repeat;
+}
+
+.bg-rajasthani {
+    background: url('/static/thali.jpeg') center/cover no-repeat;
+}
+
+.bg-maharashtrian {
+    background: url('/static/thali.jpeg') center/cover no-repeat;
+}
+
+
+.bg-south {
+    background: url('/static/thali.jpeg') center/cover no-repeat;
+}
+
+.bg-north {
+    background: url('/static/thali.jpeg') center/cover no-repeat;
+}
+
+.bg-bengali {
+    background: url('/static/thali.jpeg') center/cover no-repeat;
+}
+   /* =========================
+   EMPTY SPACE REGION IMAGES
+========================= */
+.bg-indian-inner {
+    background-image: url('/static/indian1.jpg');
+}
+
+.bg-rajasthani-inner {
+    background-image: url('/static/camel2.jpeg');
+}
+
+.bg-south-inner {
+    background-image: url('/static/south4.jpeg');
+}
+.bg-maharashtrian-inner {
+    background-image: url('/static/bandhni.jpg');
+}
+.bg-north-inner {
+    background-image: url('/static/indian9.jpg');
+}
+
+.bg-bengali-inner {
+    background-image: url('/static/Tree.jpeg');
+}
+/* =========================
+   🔘 VEG TOGGLE (PREMIUM)
+========================= */
+.toggle-pill {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    width: 90px;
+    height: 32px;
+
+    background: rgba(255,255,255,0.6);
+    border-radius: 20px;
+    cursor: pointer;
+
+    padding: 3px;
+}
+
+.toggle-slider {
+    position: absolute;
+    width: 40px;
+    height: 26px;
+    background: linear-gradient(45deg, #ff7a18, #ffb347);
+    border-radius: 20px;
+    transition: 0.3s;
+    left: 3px;
+}
+.thali-outer-container {
+  background: #FFFFFF;                      /* Solid white like left panel */
+  border-radius: 24px;                      /* Match left rounded corners */
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08); /* Same soft shadow style */
+
+  backdrop-filter: none !important;         /* Remove blur */
+  -webkit-backdrop-filter: none !important;
+
+  border: none !important;                  /* Remove thin foggy border */
+  opacity: 1 !important;                    /* Fully opaque */
+}
+.toggle-option {
+    flex: 1;
+    text-align: center;
+    z-index: 2;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.toggle-option.active {
+    color: white;
+    font-weight: bold;
+}
+
+/* =========================
+   🌍 REGION ICONS
+========================= */
+.region-icons {
+    display: flex;
+    gap: 6px;
+}
+
+.region-btn {
+    border: none;
+    background: rgba(255,255,255,0.6);
+
+    width: 32px;
+    height: 32px;
+
+    border-radius: 50%;
+    font-size: 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: 0.3s;
+}
+
+.region-btn:hover {
+    background: rgba(255,122,24,0.2);
+    transform: scale(1.1);
+}
+
+.region-btn.active {
+    background: linear-gradient(45deg, #ff7a18, #ffb347);
+    color: white;
+    box-shadow: 0 3px 8px rgba(255,122,24,0.4);
+}
+    /* Horizontal scroll container */
+.thali-scroll {
+    display: flex;
+    overflow-x: auto;
+    gap: 8px;
+    padding: 4px 2px;
+
+    scrollbar-width: none; /* Firefox */
+}
+
+.thali-scroll::-webkit-scrollbar {
+    display: none; /* Chrome */
+}
+
+/* Prevent wrapping */
+.thali-scroll .thali-btn {
+    flex: 0 0 auto;
+}
+
+/* Smaller compact buttons */
+.thali-btn {
+    padding: 5px 12px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    font-weight: bold;
+}
+    .thali-scroll {
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+@keyframes fadeSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+    /* Title animation */
+.thali-title {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+/* Fade animation */
+.fade-out {
+    opacity: 0;
+    transform: translateY(-5px);
+}
+
+.fade-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+    /* Container */
+.type-toggle {
+  display: flex;
+  justify-content: center;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50px;
+  padding: 5px;
+  backdrop-filter: blur(10px);
+  width: fit-content;
+  margin: auto;
+}
+
+/* Buttons */
+.type-btn {
+  border: none;
+  padding: 8px 18px;
+  border-radius: 50px;
+  background: transparent;
+  font-weight: 500;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Hover */
+.type-btn:hover {
+  transform: scale(1.05);
+}
+
+/* Active Veg */
+.type-btn.active[data-type="veg"] {
+  background: linear-gradient(135deg, #4CAF50, #2E7D32);
+  color: white;
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.6);
+}
+
+/* Active Non-Veg */
+.type-btn.active[data-type="nonveg"] {
+  background: linear-gradient(135deg, #ff7043, #d84315);
+  color: white;
+  box-shadow: 0 0 10px rgba(255, 112, 67, 0.6);
+}
+
+    .scanner-line {
+    position: absolute;
+    width: 90%;
+    height: 3px;
+    background: red;
+
+    top: 10%;
+    left: 5%;
+    box-shadow: 0 0 10px red;
+    z-index: 9;
+    animation: scanMove 1.2s linear infinite;
+}
+
+@keyframes scanMove {
+    0% { top: 10%; }
+    100% { top: 85%; }
+}
+
+/* 🔥 CENTER OVERLAY */
+.scan-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* Make Thali container solid */
+.thali-solid {
+    background: #ffffff !important;                 /* solid white */
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);     /* consistent shadow */
+}
+
+/* Remove transparent blurry overlay for thali */
+.thali-solid::before {
+    background: rgba(255, 255, 255, 1) !important;  /* remove fog */
+    backdrop-filter: none !important;
+}
+
+/* Remove extra texture overlay for thali */
+.thali-solid::after {
+    opacity: 0 !important;       /* makes the thali container much clearer */
+}
+
+/* 📍 POSITIONING (adjust slightly if needed) */
+
+.cal-label.show {
+    opacity: 1;
+    transform: translate(-50%, -120%);
+}
+    .label-line {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.cal-label::after {
+    content: "";
+    position: absolute;
+
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+
+    width: 10px;
+    height: 10px;
+
+    border-width: 6px;
+    border-style: solid;
+    border-color: rgba(0,0,0,0.75) transparent transparent transparent;
+    background: rgba(30, 30, 30, 0.75);
+    border-right: 1px solid rgba(255,255,255,0.15);
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+.cal-label {
+    background: linear-gradient(
+        135deg,
+        rgba(255, 87, 34, 0.85),
+        rgba(255, 138, 101, 0.75)
+    );
+}
+.cal-label {
+    border-left: 3px solid #ff5722;
+}
+.cal-label.show + .label-line {
+    opacity: 1;
+}
+
+.cal-label {
+    animation: fadeInUp 0.4s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+    .thali-scroll {
+    display: flex;
+    gap: 10px;
+
+    overflow-x: auto;   /* 🔥 enables horizontal scroll */
+    white-space: nowrap;
+
+    padding: 10px 5px;
+
+    scrollbar-width: none; /* Firefox */
+}
+
+.thali-scroll::-webkit-scrollbar {
+    display: none; /* Chrome */
+}
+
+    .thali-scroll {
+    display: flex;
+    gap: 12px;
+
+    overflow-x: auto;
+    white-space: nowrap;
+    position: relative;
+
+    padding: 10px 5px;
+    scrollbar-width: none;
+}
+
+.thali-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.thali-btn {
+    flex: 0 0 auto;
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: none;
+    background: #f1f1f1;
+    cursor: pointer;
+}
+/* 🔥 SCROLLING LINE */
+.scroll-indicator {
+    position: absolute;
+    bottom: 0;
+    height: 3px;
+    width: 0;
+
+    background: #ff5722;
+    border-radius: 2px;
+
+    transition: all 0.3s ease;
+}
+    :root {
+    --indian: #ff5722;
+    --rajasthani: #e67e22;
+    --south: #27ae60;
+    --bengali: #8e44ad;
+    --maharashtrian: #2980b9;
+}
+    .thali-btn {
+    flex: 0 0 auto;
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: none;
+    background: #f3f3f3;
+    color: #555;
+    transition: all 0.3s ease;
+}
+
+
+/* Colors */
+.thali-btn[data-thali="indian"].active {
+    color: #ff5722;
+    background: rgba(255, 87, 34, 0.15);
+}
+
+.thali-btn[data-thali="rajasthani"].active {
+    color: #e67e22;
+    background: rgba(230, 126, 34, 0.15);
+}
+
+.thali-btn[data-thali="south"].active {
+    color: #27ae60;
+    background: rgba(39, 174, 96, 0.15);
+}
+
+.thali-btn[data-thali="bengali"].active {
+    color: #8e44ad;
+    background: rgba(142, 68, 173, 0.15);
+}
+.thali-btn {
+    color: #444;  /* normal state readable */
+}
+
+.thali-btn.active {
+    font-weight: 600;
+}
+.thali-btn[data-thali="maharashtrian"].active {
+    color: #2980b9;
+    background: rgba(41, 128, 185, 0.15);
+}
+.thali-btn::after {
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255,255,255,0.4),
+        transparent
+    );
+}
+#thali-title {
+    position: relative;
+
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    /* 🔥 Glossy orange gradient */
+    background: linear-gradient(135deg, #ff7a18, #ff5722, #ffb347);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    /* 🔥 depth + glow */
+    text-shadow:
+        0 2px 8px rgba(0,0,0,0.15),
+        0 0 10px rgba(255,122,24,0.35);
+
+    transition: all 0.4s ease;
+}
+
+#thali-title::after {
+    content: "";
+    position: absolute;
+
+    top: 0;
+    left: -60%;
+
+    width: 50%;
+    height: 100%;
+
+    background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255,255,255,0.7),
+        transparent
+    );
+
+    transform: skewX(-20deg);
+    pointer-events: none;
+}
+
+#thali-title:hover::after {
+    animation: shine 0.9s ease;
+}
+
+@keyframes shine {
+    0% { left: -60%; }
+    100% { left: 130%; }
+}
+
+@keyframes shine {
+    0% { left: -50%; }
+    100% { left: 120%; }
+}
+    transform: skewX(-20deg);
+}
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    /* 🔥 smooth look */
+    text-shadow:
+        0 2px 6px rgba(0,0,0,0.15),
+        0 0 8px rgba(255,122,24,0.3);
+
+    transition: all 0.3s ease;
+}
+/* 🔥 Image styling */
+#thali-icon {
+    width: 34px;
+    height: 34px;
+
+    border-radius: 50%;
+
+    box-shadow:
+        0 2px 8px rgba(0,0,0,0.2),
+        0 0 10px rgba(255,122,24,0.5);
+
+    transition: all 0.3s ease;
+}
+
+#thali-title:hover #thali-icon {
+    transform: scale(1.1);
+    box-shadow:
+        0 4px 12px rgba(0,0,0,0.25),
+        0 0 18px rgba(255,122,24,0.8);
+}
+.fade-out-title {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+}
+
+.fade-in-title {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition: all 0.4s ease;
+}
+.thali-decorations {
+  position: absolute;
+  bottom: -75px;             /* distance from bottom of the card */
+  left: 50%;               /* start from center */
+  transform: translateX(-50%); /* truly center the container */
+  display: flex;           /* allows multiple images side by side */
+  gap: 140px;               /* space between multiple images */
+  pointer-events: none;
+  z-index: 10;             /* ensure images are above the Thali plate */
+}
+
+.thali-decorations img {
+  width: 90px;       /* adjust to your desired size */
+  height: 150px;
+  opacity: 0;
+  transform: scale(0);
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.thali-decorations img.show {
+  opacity: 1;
+  transform: scale(1);
+}
+/* Right image */
+.thali-decorations img.right {
+  position: relative;   /* make sure it's absolute */
+  right: 30px;           /* start at 5px */
+  bottom: 5px;
+  transform-origin: bottom right;
+}
+    /* Left image */
+.thali-decorations img.left {
+  position: absolute;
+  left: 5px;        /* inside left corner */
+  bottom: 5px;
+  transform-origin: bottom left;
+}
+
+    .thali-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.thali-item {
+    width: 120px;
+}
+
+@media (max-width: 768px) {
+    .thali-item {
+        width: 80px;
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg px-4">
+    <a class="navbar-brand fw-bold" href="/home">
+        🍎 Food Calorie AI
+    </a>
+
+    <div class="ms-auto d-flex align-items-center gap-3 nav-menu">
+        <a href="/home" class="menu-item active">Home</a>
+        <a href="/dashboard" class="menu-item">Dashboard</a>
+        <a href="/history" class="menu-item">History</a>
+        <a href="/profile" class="menu-item">Profile</a>
+    </div>
+
+    <div class="ms-3">
+        <button id="themeToggle" class="toggle-btn">
+            🌙
+        </button>
+    </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+    <h1>AI Food <span>Calorie Detection</span></h1>
+    <p>Upload or capture food images to detect calories instantly.</p>
+</div>
+
+<!-- MAIN SECTION -->
+<div class="container">
+
+<div class="row g-4 align-items-stretch">
+
+<!-- LEFT SECTION -->
+<div class="col-lg-8">
+
+    <!-- Upload Section -->
+<div class="glass common-card p-2 mb-4">
+
+    <div class="d-flex align-items-center w-100 compact-row">
+
+        <!-- Upload -->
+        <button class="btn btn-orange flex-fill h-100"
+        onclick="document.getElementById('upload').click()">
+    <i class="fa fa-upload me-2"></i> Upload Image
+</button>
+
+<input type="file" id="upload" accept="image/*" hidden>
+
+        <!-- Camera -->
+        <button class="btn btn-light-custom flex-fill h-100" onclick="openCamera()">
+    <i class="fa fa-camera me-2"></i> Open Camera
+</button>
+<!-- Camera Preview -->
+<video id="camera" autoplay playsinline muted
+       style="width:100%; max-height:220px; display:none; border-radius:15px;"></video>
+
+<!-- Capture Button -->
+<div class="text-center mt-2">
+    <button id="captureBtn" class="btn btn-orange" style="display:none;">
+        📸 Capture
+    </button>
+</div>
+
+<!-- Final Image Preview -->
+<div class="mt-3 text-center">
+    <img id="preview" class="img-fluid rounded"
+         style="max-height:200px; display:none;">
+</div>
+        <!-- QR -->
+        <div class="qr-box text-center flex-fill h-100 d-flex flex-column justify-content-center align-items-center" id="qrBox">
+            <img
+                src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=http://127.0.0.1:5000"
+            >
+            <small class="mt-1">Scan QR</small>
+        </div>
+
+    </div>
+
+</div>
+    <!-- Result + Nutrition -->
+    <div class="glass p-4">
+<div class="mt-4">
+
+    <ul id="logList" class="list-group"></ul>
+</div>
+        <div class="row">
+            <!-- Food -->
+           <div class="col-md-5">
+
+    <div class="food-card p-3">
+
+        <h5 class="mb-3">Detected Food</h5>
+
+        <!-- Image -->
+        <div class="position-relative">
+            <img id="foodImage" class="img-fluid rounded food-img" style="display:none;">
+
+              <!-- Dark Overlay -->
+    <div class="overlay"></div>
+
+    <!-- Scanner Line -->
+    <div class="scanner-line" style="display:none;"></div>
+
+    <!-- Detection Box -->
+    <div class="detection-box">
+        <span class="corner top-left"></span>
+        <span class="corner top-right"></span>
+        <span class="corner bottom-left"></span>
+        <span class="corner bottom-right"></span>
+    </div>
+            <!-- Confidence Badge -->
+            <div class="confidence-badge">
+
+                <i class="fa fa-check-circle text-success"></i>
+                <span id="confidence">0%</span>
+            </div>
+        </div>
+
+        <!-- Food Info -->
+        <div class="mt-2">
+            <h6 id="foodName" class="mb-1">No food detected</h6>
+
+            <button id="removeBtn" class="btn btn-sm btn-light remove-btn" style="display:none;">
+    <i class="fa fa-times"></i> Remove Image
+</button>
+
+        </div>
+
+    </div>
+                  <!-- Optional -->
+    <button id="viewLogBtn" class="btn btn-sm w-100 mt-2">
+        📄 View Log
+    </button>
+
+</div>
+
+            <!-- Nutrition -->
+<div class="col-md-7 p-3 rounded shadow-sm nutrition-card">
+                <h5 class = "">Nutrition Info</h5>
+
+<div class="d-flex justify-content-between align-items-center mb-2">
+    <span>Calories</span>
+    <strong id="calories">0 kcal</strong>
+</div>
+                <div class="progress mb-3" style="height: 6px;">
+    <div id="calorieBar" class="progress-bar bg-info rounded-pill" style="width:0%"></div>
+</div>
+
+
+                  <div class="d-flex justify-content-between">
+                  <span>Protein</span>
+                <span id="proteinValue">0g</span>
+                    </div>
+              <div class="progress mb-3" style="height: 8px;">
+    <div id="proteinBar" class="progress-bar bg-warning rounded-pill" style="width:0%"></div>
+</div>
+
+                <div class="d-flex justify-content-between">
+    <span>Carbs</span>
+    <span id="carbsValue">0g</span>
+</div>
+              <div class="progress mb-3" style="height: 8px;">
+    <div id="carbsBar" class="progress-bar bg-danger rounded-pill" style="width:0%"></div>
+</div>
+
+                <div class="d-flex justify-content-between">
+    <span>Fat</span>
+    <span id="fatValue">0g</span>
+</div>
+               <div class="progress mb-3" style="height: 8px;">
+    <div id="fatBar" class="progress-bar bg-success rounded-pill" style="width:0%"></div>
+</div>
+<h6 class="mt-3">Micronutrients</h6>
+
+<div class="d-flex justify-content-between text-center">
+
+    <div class="flex-fill mx-1">
+        <small>Vitamin A</small>
+        <div class="progress" style="height: 6px;">
+            <div id="vitaminABar" class="progress-bar bg-warning" style="width:0%"></div>
+        </div>
+        <small id="vitaminA">0%</small>
+    </div>
+
+    <div class="flex-fill mx-1">
+        <small>Calcium</small>
+        <div class="progress" style="height: 6px;">
+            <div id="calciumBar" class="progress-bar bg-info" style="width:0%"></div>
+        </div>
+        <small id="calcium">0%</small>
+    </div>
+
+    <div class="flex-fill mx-1">
+        <small>Iron</small>
+        <div class="progress" style="height: 6px;">
+            <div id="ironBar" class="progress-bar bg-danger" style="width:0%"></div>
+        </div>
+        <small id="iron">0%</small>
+    </div>
+
+
+</div>
+             <button id = "addLogBtn" class="btn w-100 text-white mt-3" style="
+    background: linear-gradient(45deg, #ff7a18, #ffb347);
+    border-radius: 25px;
+    padding: 10px;
+    font-weight: 500;
+">
+    ➕ Add To Daily Log
+</button>
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+
+    <!-- RIGHT SECTION -->
+   <div class="col-lg-4 col-md-12 p-0">
+  <div id="app-bg" class="app-background bg-bengali">
+  <div class="thali-card glass-card p-4">
+
+    <!-- Title -->
+    <h2 id="thali-title">
+    <img id="thali-icon" src="" alt="icon">
+    <span id="thali-text">Indian Thali</span>
+</h2>
+      <!-- 🔥 Thali Controls -->
+    <!-- Thali Plate -->
+<div class="thali-controls mb-2">
+
+    <!-- Veg / Non-Veg -->
+    <div class="d-flex justify-content-center mb-2">
+        <!-- Veg / Non-Veg -->
+        <div class="type-toggle">
+<button class="type-btn active" data-type="veg">🌱</button>
+<button class="type-btn" data-type="nonveg">🍗</button>
+    </div>
+    </div>
+<!-- Thali Buttons -->
+<div class="thali-scroll" id="thaliScroll">
+    <button class="thali-btn active" data-thali="indian">Indian</button>
+<button class="thali-btn" data-thali="rajasthani">Rajasthani</button>
+<button class="thali-btn" data-thali="south">South</button>
+<button class="thali-btn" data-thali="bengali">Bengali</button>
+<button class="thali-btn" data-thali="maharashtrian">Maharashtrian</button>
+    <!-- 🔥 moving line -->
+    <div class="scroll-indicator" id="scrollIndicator"></div>
+</div>
+    <div class="thali-plate d-flex flex-wrap justify-content-center">
+
+      <!-- Each item -->
+  <div class="thali-plate-wrapper">
+
+      <!-- 🔥 ADD OVERLAY HERE -->
+
+  <!-- Region image only for empty space -->
+  <div id="thali-empty-bg" class="thali-empty-bg bg-indian-inner"></div>
+
+
+  <div class="thali-plate-real">
+
+      <!-- 🔥 CALORIE LABELS -->
+      <div class="cal-label" id="label-chapati"></div>
+<div class="cal-label" id="label-rice"></div>
+<div class="cal-label" id="label-dal"></div>
+<div class="cal-label" id="label-paneer"></div>
+<div class="cal-label" id="label-veg"></div>
+<div class="cal-label" id="label-salad"></div>
+<div class="cal-label" id="label-sweet"></div>
+
+    <img src="{{ url_for('static', filename='/chapati.png') }}"
+         class="thali-food" data-item="chapati">
+
+   <img src="{{ url_for('static', filename='Rice.png') }}"
+     class="thali-food center-rice"
+     data-item="rice">
+
+    <img src="{{ url_for('static', filename='Dal.png') }}"
+         class="thali-food" data-item="dal">
+
+    <img src="{{ url_for('static', filename='paneer.png') }}"
+         class="thali-food" data-item="paneer">
+
+    <img src="{{ url_for('static', filename='veg.png') }}"
+         class="thali-food" data-item="veg">
+
+    <img src="{{ url_for('static', filename='salad.png') }}"
+         class="thali-food" data-item="salad">
+
+      <img src="{{ url_for('static', filename='sweet.png') }}"
+         class="thali-food" data-item="sweet">
+
+       <div id="detection-layer"></div>
+
+      <!-- 🔥 ADD DECORATIVE IMAGES HERE -->
+<div id="thali-decorations" class="thali-decorations"></div>
+
+  </div>
+</div>
+    </div>
+
+    <!-- Selected Item Details -->
+    <div class="item-details mt-3 p-3 glass-inner d-none" id="item-details">
+      <h6 id="item-name"></h6>
+      <p>Calories: <span id="item-cal"></span> kcal</p>
+      <p>Protein: <span id="item-protein"></span> g</p>
+      <p>Carbs: <span id="item-carbs"></span> g</p>
+      <p>Fats: <span id="item-fats"></span> g</p>
+        <p class="mt-2 text-warning" id="item-tip"></p>
+    </div>
+
+  </div>
+</div>
+</div>
+</div>
+</div>
+<!-- JS -->
+<script>
+
+    // =======================
+// GLOBAL STATE
+// =======================
+let currentRegion = "indian";
+let currentType = "veg";
+
+ // =======================
+// FOOD CALORIES
+// =======================
+const foodCalories = {
+    chapati: 120,
+    rice: 130,
+    dal: 116,
+    paneer: 265,
+    chicken: 239,
+    egg: 155,
+    dosa: 150,
+    idli: 120,
+    sambar: 140,
+    uttapam: 160,
+    coconut_chutney: 80,
+    payasam: 200,
+    baati: 180,
+    dal_baati: 200,
+    gatte: 230,
+    ker_sangri: 160,
+    churma: 300,
+    luchi: 170,
+    alu_posto: 150,
+    rasgulla: 250,
+    salad: 50,
+    salad1: 60,
+    veg: 180,
+    sweet: 150,
+    bhakri: 180,
+    varan: 140,
+    bhaji: 150,
+    koshimbir: 60,
+    puranpoli: 300,
+    alu_wadi: 210,
+    fish_curry: 220,
+    bhapa_doi: 180,
+    Shrikhand: 210,
+    fry_fish: 224,
+    Naan: 260,
+    Raita: 90,
+    Biryani: 350
+};
+</script>
+<script>
+const menuItems = document.querySelectorAll(".menu-item");
+
+menuItems.forEach(item => {
+    item.addEventListener("click", function() {
+
+    const key = this.dataset.thali;
+
+setTimeout(() => {
+    showCaloriesWithDelay();
+}, 1000);
+
+        // Remove active from all
+        menuItems.forEach(el => el.classList.remove("active"));
+
+        // Add active to clicked
+        this.classList.add("active");
+    });
+});
+</script>
+<script>
+const toggleBtn = document.getElementById("themeToggle");
+
+// Load saved mode
+if(localStorage.getItem("theme") === "dark"){
+    document.body.classList.add("dark-mode");
+    toggleBtn.innerText = "☀️";
+}
+
+toggleBtn.addEventListener("click", () => {
+    document.body.classList.toggle("dark-mode");
+
+    if(document.body.classList.contains("dark-mode")){
+        toggleBtn.innerText = "☀️";
+        localStorage.setItem("theme", "dark");
+    } else {
+        toggleBtn.innerText = "🌙";
+        localStorage.setItem("theme", "light");
+    }
+});
+</script>
+<script>
+document.getElementById("qrBox").addEventListener("click", function() {
+    alert("📱 Scan the QR to detect food on your phone!");
+});
+</script>
+<script>
+// =======================
+// CAMERA HANDLING (CLEAN)
+// =======================
+
+let cameraStream = null;
+
+function openCamera() {
+    const video = document.getElementById("camera");
+    const captureBtn = document.getElementById("captureBtn");
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            cameraStream = stream;
+
+            video.srcObject = stream;
+            video.style.display = "block";
+            captureBtn.style.display = "inline-block";
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Camera access denied!");
+        });
+}
+
+// 🔥 OPTIONAL (GOOD PRACTICE)
+function stopCamera() {
+    const video = document.getElementById("camera");
+
+    if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+        cameraStream = null;
+    }
+
+    video.style.display = "none";
+}
+</script>
+
+<script>
+// =======================
+// SCANNER EFFECT
+// =======================
+
+function startScanning() {
+    document.querySelector(".scanner-line").style.display = "block";
+}
+
+function stopScanning() {
+    document.querySelector(".scanner-line").style.display = "none";
+}
+</script>
+
+<script>
+// =======================
+// REMOVE IMAGE RESET
+// =======================
+const removeBtn = document.getElementById("removeBtn");
+const foodImage = document.getElementById("foodImage");
+
+if (removeBtn) {
+    removeBtn.addEventListener("click", function () {
+
+        // Reset image
+        foodImage.src = "";
+        foodImage.style.display = "none";
+
+        // Reset input
+        document.getElementById("upload").value = "";
+
+        // Reset text
+        document.getElementById("foodName").innerText = "No food detected";
+        document.getElementById("confidence").innerText = "0%";
+        document.getElementById("calories").innerText = "0 kcal";
+
+        // Reset macro values
+        document.getElementById("proteinValue").innerText = "0g";
+        document.getElementById("carbsValue").innerText = "0g";
+        document.getElementById("fatValue").innerText = "0g";
+
+        // Reset bars
+        document.getElementById("proteinBar").style.width = "0%";
+        document.getElementById("carbsBar").style.width = "0%";
+        document.getElementById("fatBar").style.width = "0%";
+        document.getElementById("calorieBar").style.width = "0%";
+
+        document.getElementById("vitaminABar").style.width = "0%";
+        document.getElementById("calciumBar").style.width = "0%";
+        document.getElementById("ironBar").style.width = "0%";
+    });
+}
+</script>
+
+
+<script>
+// =======================
+// INITIAL ANIMATION (DEMO)
+// =======================
+
+function updateNutrition(data) {
+
+    setTimeout(() => {
+
+        // Calories
+        let caloriePercent = (data.calories / 2000) * 100;
+        document.getElementById("calorieBar").style.width = caloriePercent + "%";
+
+        // 🔥 FIXED scaling (same as main UI)
+        document.getElementById("proteinBar").style.width = Math.min(data.protein * 2, 100) + "%";
+        document.getElementById("carbsBar").style.width = Math.min(data.carbs * 1.5, 100) + "%";
+        document.getElementById("fatBar").style.width = Math.min(data.fat * 2, 100) + "%";
+
+        // Micronutrients
+        document.getElementById("vitaminABar").style.width = data.vitaminA + "%";
+        document.getElementById("calciumBar").style.width = data.calcium + "%";
+        document.getElementById("ironBar").style.width = data.iron + "%";
+
+    }, 200);
+}
+</script>
+
+<script>
+// =======================
+// ADD TO LOG (LOCAL STORAGE)
+// =======================
+const addLogBtn = document.getElementById("addLogBtn");
+
+if (addLogBtn) {
+    addLogBtn.addEventListener("click", function () {
+
+        let name = document.getElementById("foodName").innerText;
+
+        // 🔥 SAFETY CHECK
+        if (!name || name === "No food detected" || name === "Unknown Food") {
+            alert("⚠️ Please detect a valid food first!");
+            return;
+        }
+
+        let foodData = {
+            name: name,
+            calories: document.getElementById("calories").innerText,
+            protein: document.getElementById("proteinValue").innerText,
+            carbs: document.getElementById("carbsValue").innerText,
+            fat: document.getElementById("fatValue").innerText,
+            time: new Date().toLocaleString()
+        };
+
+        let logs = JSON.parse(localStorage.getItem("dailyLogs")) || [];
+        logs.push(foodData);
+        localStorage.setItem("dailyLogs", JSON.stringify(logs));
+
+        alert("✅ Added to Daily Log!");
+    });
+}
+</script>
+
+<script>
+    document.getElementById("viewLogBtn").addEventListener("click", function () {
+
+    let logs = JSON.parse(localStorage.getItem("dailyLogs")) || [];
+
+    let newWindow = window.open("", "_blank");
+
+    let content = `
+        <html>
+        <head>
+            <title>Daily Log</title>
+            <style>
+                body { font-family: Arial; padding: 20px; }
+                h2 { text-align: center; }
+                .card {
+                    border: 1px solid #ddd;
+                    padding: 10px;
+                    margin-bottom: 10px;
+                    border-radius: 10px;
+                }
+            </style>
+        </head>
+        <body>
+            <h2>Daily Food Log</h2>
+    `;
+
+    logs.forEach(item => {
+        content += `
+            <div class="card">
+                <strong>${item.name}</strong><br>
+                ${item.calories} | Protein: ${item.protein} | Carbs: ${item.carbs} | Fat: ${item.fat}<br>
+                <small>${item.time}</small>
+            </div>
+        `;
+    });
+
+    content += `</body></html>`;
+
+    newWindow.document.write(content);
+});
+</script>
+<script>
+
+// =======================
+// COMMON FOODS (MANUAL)
+// =======================
+const commonFoods = [
+    { name: "Apple", calories: 52, protein: 0.3, carbs: 14, fat: 0.2 },
+    { name: "Banana", calories: 89, protein: 1.1, carbs: 23, fat: 0.3 },
+
+    // 🇮🇳 Indian Foods
+    { name: "Chapati", calories: 120, protein: 3, carbs: 20, fat: 3 },
+    { name: "Rice (Cooked)", calories: 130, protein: 2.5, carbs: 28, fat: 0.3 },
+    { name: "Dal", calories: 116, protein: 9, carbs: 20, fat: 0.4 },
+    { name: "Paneer", calories: 265, protein: 18, carbs: 1.2, fat: 20 },
+    { name: "Milk", calories: 42, protein: 3.4, carbs: 5, fat: 1 },
+    { name: "Egg", calories: 155, protein: 13, carbs: 1.1, fat: 11 },
+    { name: "Samosa", calories: 262, protein: 3, carbs: 31, fat: 17 },
+    { name: "Poha", calories: 180, protein: 4, carbs: 30, fat: 5 }
+];
+
+let selectedFood = null;
+
+const input = document.getElementById("foodInput");
+const results = document.getElementById("results");
+
+// =======================
+// SEARCH HANDLER
+// =======================
+input.addEventListener("input", async () => {
+
+    let query = input.value.toLowerCase().trim();
+    results.innerHTML = "";
+
+    if (!query) return;
+
+    // =======================
+    // 1. COMMON FOODS FIRST
+    // =======================
+    commonFoods
+        .filter(food => food.name.toLowerCase().includes(query))
+        .forEach(food => {
+            let div = document.createElement("div");
+            div.classList.add("result-item");
+            div.innerText = food.name + " (Best Match)";
+
+            div.onclick = () => showManualFood(food);
+
+            results.appendChild(div);
+        });
+
+    // =======================
+    // 2. API CALL
+    // =======================
+    if (query.length < 2) return;
+
+    try {
+        let res = await fetch(
+            `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${query}&search_simple=1&action=process&json=1&page_size=10`
+        );
+
+        let data = await res.json();
+
+        if (!data.products) return;
+
+        data.products
+            .filter(food => food.product_name && food.nutriments && food.nutriments["energy-kcal_100g"])
+            .slice(0, 5)
+            .forEach(food => {
+
+                let div = document.createElement("div");
+                div.classList.add("result-item");
+                div.innerText = food.product_name;
+
+                div.onclick = () => showFood(food);
+
+                results.appendChild(div);
+            });
+
+    } catch (err) {
+        console.error("API Error:", err);
+    }
+});
+
+
+// =======================
+// API FOOD SELECT
+// =======================
+function showFood(food) {
+
+    selectedFood = {
+        calories: food.nutriments["energy-kcal_100g"] || 0,
+        protein: food.nutriments.proteins_100g || 0,
+        carbs: food.nutriments.carbohydrates_100g || 0,
+        fat: food.nutriments.fat_100g || 0,
+        name: food.product_name || "Unknown"
+    };
+
+    document.getElementById("foodDetails").style.display = "block";
+    document.getElementById("foodName").innerText = selectedFood.name;
+
+    document.getElementById("qty").value = 1;
+
+    updateCalories();
+}
+
+
+// =======================
+// MANUAL FOOD SELECT
+// =======================
+function showManualFood(food) {
+
+    selectedFood = {
+        name: food.name,
+        calories: food.calories,
+        protein: food.protein,
+        carbs: food.carbs,
+        fat: food.fat
+    };
+
+    document.getElementById("foodDetails").style.display = "block";
+    document.getElementById("foodName").innerText = selectedFood.name;
+
+    document.getElementById("qty").value = 1;
+
+    updateCalories();
+}
+
+
+// =======================
+// UPDATE CALCULATIONS
+// =======================
+function updateCalories() {
+
+    let qty = parseFloat(document.getElementById("qty").value) || 1;
+
+    if (!selectedFood) return;
+
+    document.getElementById("cal").innerText = (selectedFood.calories * qty).toFixed(1);
+    document.getElementById("protein").innerText = (selectedFood.protein * qty).toFixed(1);
+    document.getElementById("carbs").innerText = (selectedFood.carbs * qty).toFixed(1);
+    document.getElementById("fat").innerText = (selectedFood.fat * qty).toFixed(1);
+}
+
+
+// =======================
+// ADD TO LOG (FRONTEND ONLY)
+// =======================
+function addToLog() {
+
+    if (!selectedFood) {
+        alert("Select a food first!");
+        return;
+    }
+
+    alert(selectedFood.name + " added to log ✅ (backend next step)");
+});
+</script>
+
+<script>
+// =======================
+// FINAL CLEAN JS (FIXED)
+// =======================
+
+// Upload Image
+document.getElementById("upload").addEventListener("change", function () {
+
+    const file = this.files[0];
+    if (!file) return;
+
+    const preview = document.getElementById("preview");
+    preview.src = URL.createObjectURL(file);
+    preview.style.display = "block";
+
+    const foodImg = document.getElementById("foodImage");
+    foodImg.src = URL.createObjectURL(file);
+    foodImg.style.display = "block";
+
+    // 🔥 Loading state
+    document.getElementById("foodName").innerText = "Detecting...";
+    document.getElementById("confidence").innerText = "...";
+
+    let formData = new FormData();
+    formData.append("image", file);
+
+    fetch("/predict", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log("DATA:", data);
+
+        if (data.error) {
+            alert("Backend Error: " + data.error);
+            return;
+        }
+
+        updateUI(data);
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Upload failed");
+    });
+
+});
+
+
+// Camera
+document.getElementById("captureBtn").addEventListener("click", function () {
+
+    const video = document.getElementById("camera");
+
+    const canvas = document.createElement("canvas");
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(video, 0, 0);
+
+    const imageData = canvas.toDataURL("image/jpeg");
+
+    fetch("/predict", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ image: imageData })
+    })
+    .then(res => res.json())
+    .then(updateUI)
+    .catch(() => alert("Camera failed"));
+
+    video.srcObject.getTracks().forEach(track => track.stop());
+    video.style.display = "none";
+    this.style.display = "none";
+});
+
+
+// Update UI
+function updateUI(data) {
+
+    console.log("UPDATING UI:", data);
+
+    if (!data || data.error) {
+        console.error("Invalid data:", data);
+        alert("Something went wrong from backend");
+        return;
+    }
+
+    // Image
+    const img = document.getElementById("foodImage");
+    img.src = data.image ? data.image : "/static/default_food.png";
+    img.style.display = "block";
+
+    // Food name + confidence
+    if (data.name === "unknown") {
+        document.getElementById("foodName").innerText = "Unknown Food";
+    } else {
+        document.getElementById("foodName").innerText = data.name;
+    }
+
+    document.getElementById("confidence").innerText =
+        (data.confidence || 0).toFixed(1) + "%";
+
+    // Nutrition
+    document.getElementById("calories").innerText = (data.calories || 0) + " kcal";
+    document.getElementById("proteinValue").innerText = (data.protein || 0) + "g";
+    document.getElementById("carbsValue").innerText = (data.carbs || 0) + "g";
+    document.getElementById("fatValue").innerText = (data.fat || 0) + "g";
+
+    // Bars (fixed scaling)
+    document.getElementById("proteinBar").style.width = Math.min((data.protein || 0) * 2, 100) + "%";
+    document.getElementById("carbsBar").style.width = Math.min((data.carbs || 0) * 1.5, 100) + "%";
+    document.getElementById("fatBar").style.width = Math.min((data.fat || 0) * 2, 100) + "%";
+
+    // Micronutrients
+    document.getElementById("vitaminA").innerText = (data.vitamin_a || 0) + "%";
+    document.getElementById("calcium").innerText = (data.calcium || 0) + "%";
+    document.getElementById("iron").innerText = (data.iron || 0) + "%";
+
+    document.getElementById("vitaminABar").style.width = (data.vitamin_a || 0) + "%";
+    document.getElementById("calciumBar").style.width = (data.calcium || 0) + "%";
+    document.getElementById("ironBar").style.width = (data.iron || 0) + "%";
+
+    // Calories progress
+    let percent = ((data.calories || 0) / 2000) * 100;
+    document.getElementById("calorieBar").style.width = percent + "%";
+}
+</script>
+<script>
+    let activeItem = null;
+
+const tooltip = document.getElementById("calorie-tooltip");
+const tooltipText = document.getElementById("tooltip-text");
+
+document.querySelectorAll('.thali-food').forEach(item => {
+
+    item.addEventListener('click', function (e) {
+
+        console.log("CLICK WORKING"); // 🔥 DEBUG
+
+         // 🔥 ADD THIS
+        updateBackground(currentRegion);
+
+        // Toggle hide
+        if (activeItem === this) {
+            tooltip.style.display = "none";
+            activeItem = null;
+            return;
+        }
+
+        activeItem = this;
+
+        // Positioning
+        const rect = this.getBoundingClientRect();
+       const parent = document.querySelector(".thali-plate-real");
+
+// ❗ if going outside top → show BELOW
+if (topPos < 0) {
+    topPos = y + item.offsetHeight + 5;
+}
+// ✅ FIX DAL POSITION
+if (foodName === "dal" || foodName === "sambar") {
+    topPos += 10; // adjust as needed (5–15)
+}
+label.style.top = topPos + "px";
+    });
+
+});
+</script>
+<script>
+    // =======================
+// THALI BUTTON LOGIC
+// =======================
+
+// Handle Veg / Non-Veg
+document.querySelectorAll('[data-type]').forEach(btn => {
+    btn.addEventListener('click', function () {
+
+        // Remove active from all
+        document.querySelectorAll('[data-type]')
+            .forEach(b => b.classList.remove('active'));
+
+        // Add active to clicked
+        this.classList.add('active');
+
+        // 🔥 IMPORTANT FIX
+        currentType = this.getAttribute("data-type");
+
+        // 🔥 UPDATE UI AGAIN
+        updateThaliUI(currentRegion, currentType);
+        updateLabels(currentRegion, currentType);
+    });
+});
+// =======================
+// BUTTON CLICK HANDLER
+// =======================
+document.querySelectorAll('[data-thali]').forEach(btn => {
+    btn.addEventListener('click', function () {
+
+        currentRegion = this.getAttribute("data-thali"); // 🔥 FIX
+
+        updateThaliUI(currentRegion, currentType);
+        updateLabels(currentRegion, currentType);
+
+        // 🔥 ADD THIS
+        updateBackground(currentRegion);
+
+        // optional (for title + icon)
+        updateTitle(currentRegion);
+    });
+});
+</script>
+<script>
+    const thaliMenus = {
+
+   indian: {
+    veg: {
+        chapati: { img: "chapati.png", food: "chapati" },
+        rice: { img: "Rice.png", food: "rice" },
+        dal: { img: "Dal.png", food: "dal" },
+        paneer: { img: "paneer.png", food: "paneer" },
+        veg: { img: "veg.png", food: "veg" },
+        salad: { img: "salad.png", food: "salad" },
+        sweet: { img: "sweet.png", food: "sweet" }
+    },
+    nonveg: {
+        chapati: { img: "Naan.png", food: "Naan" },
+        rice: { img: "non-veg_biryani.png", food: "Biryani" },
+        dal: { img: "boondi_raita.png", food: "Raita" },
+        paneer: { img: "chicken.png", food: "chicken" },
+        veg: { img: "egg_curry.png", food: "egg" },
+        salad: { img: "fry_fish.png", food: "fry_fish" },
+        sweet: { img: "Shrikhand.png", food: "Shrikhand" }
+    }
+},
+
+rajasthani: {
+    veg: {
+        chapati: { img: "baati.png", food: "baati" },
+        rice: { img: "Rice.png", food: "rice" },
+        dal: { img: "dal_baati.png", food: "dal_baati" },
+        paneer: { img: "gatte.png", food: "gatte" },
+        veg: { img: "ker_sangri.png", food: "ker_sangri" },
+        salad: { img: "salad1.png", food: "salad1" },
+        sweet: { img: "churma.png", food: "churma" }
+    }
+},
+   south: {
+    veg: {
+        chapati: { img: "dosa.png", food: "dosa" },
+        rice: { img: "Rice.png", food: "rice" },
+        dal: { img: "sambar.png", food: "sambar" },
+        paneer: { img: "idli.png", food: "idli" },
+        veg: { img: "uttapam.png", food: "uttapam" },
+        salad: { img: "coconut_chutney.png", food: "coconut_chutney" },
+        sweet: { img: "payasam.png", food: "payasam" }
+    }
+},
+
+   bengali: {
+    veg: {
+        chapati: { img: "luchi.png", food: "luchi" },
+        rice: { img: "Rice.png", food: "rice" },
+        dal: { img: "dal.png", food: "dal" },
+        paneer: { img: "fish_curry.png", food: "fish_curry" },
+        veg: { img: "alu_posto.png", food: "alu_posto" },
+        salad: { img: "bhapa_doi.png", food: "bhapa_doi" },
+        sweet: { img: "rasgulla.png", food: "rasgulla" }
+    }
+},
+    maharashtrian: {
+    veg: {
+        chapati: { img: "bhakri.png", food: "bhakri" },
+        rice: { img: "Rice.png", food: "rice" },
+        dal: { img: "varan.png", food: "varan" },
+        paneer: { img: "alu_wadi.png", food: "alu_wadi" },
+        veg: { img: "bhaji.png", food: "bhaji" },
+        salad: { img: "koshimbir.png", food: "koshimbir" },
+        sweet: { img: "puranpoli.png", food: "puranpoli" }
+    }
+}
+};
+
+    // =======================
+// UPDATE IMAGES
+// =======================
+function updateThaliUI(region, type) {
+
+    const menu = thaliMenus[region]?.[type];
+    if (!menu) return;
+
+    document.querySelectorAll(".thali-food").forEach(item => {
+        const key = item.getAttribute("data-item");
+
+        if (menu[key]) {
+            item.src = "/static/" + menu[key].img;
+        }
+    });
+}
+</script>
+<script>
+
+const thaliNames = {
+    indian: "Indian Thali",
+    rajasthani: "Rajasthani Thali",
+    south: "South Indian Thali",
+    north: "North Indian Thali",
+    bengali: "Bengali Thali"
+};
+    const title = document.getElementById("thali-title");
+
+title.classList.add("fade-out");
+
+setTimeout(() => {
+    title.innerText = "🍽️ " + thaliNames[currentRegion];
+    title.classList.remove("fade-out");
+}, 200);
+
+    const thaliMeta = {
+    indian: { name: "Classic Indian Thali", icon: "🍽️" },
+    rajasthani: { name: "Rajasthani Thali", icon: "🐪" },
+    south: { name: "South Indian Thali", icon: "🌴" },
+    north: { name: "North Indian Thali", icon: "" },
+    bengali: { name: "Bengali Thali", icon: "🐟" },
+    maharashtrian: { name: "Maharashtrian Thali", icon: "👑" }
+};
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+ updateThaliUI(currentRegion, currentType);
+    updateLabels(currentRegion, currentType); // 🔥 MUST
+
+  // ✅ MOVE THIS OUTSIDE (VERY IMPORTANT)
+  const thaliNutrition = {
+    indian: { calories: 850, protein: 30, carbs: 110, fats: 25 },
+    rajasthani: { calories: 950, protein: 28, carbs: 120, fats: 35 },
+    south: { calories: 700, protein: 22, carbs: 100, fats: 18 },
+    north: { calories: 800, protein: 26, carbs: 105, fats: 22 },
+    bengali: { calories: 780, protein: 24, carbs: 95, fats: 20 }
+  };
+
+  const thaliMeta = {
+    indian: "🍽️ Classic Indian Thali",
+    rajasthani: "🥘 Royal Rajasthan Thali",
+    south: "🍛 Southern Spice Thali",
+    north: "🍲 North Indian Thali",
+    bengali: "🐟 Bengal’s Flavors",
+    maharashtrian: "🍛 Maharashtrian Deccan Delight"
+  };
+
+  let currentThali = "indian";
+
+  const titleEl = document.getElementById("thali-title");
+
+  function updateTitle() {
+    if (titleEl && thaliMeta[currentThali]) {
+      titleEl.textContent = thaliMeta[currentThali];
+    }
+  }
+
+  document.querySelectorAll(".thali-btn").forEach(btn => {
+    btn.addEventListener("click", function () {
+
+    const newTitle = this.innerText + " Flavors"; // dynamic
+
+        // 🔥 animation start
+        title.classList.add("fade-out-title");
+
+        setTimeout(() => {
+            title.innerText = newTitle;   // change text
+            title.classList.remove("fade-out-title");
+            title.classList.add("fade-in-title");
+        }, 400);
+
+      const key = this.dataset.thali;
+      if (!key) return;
+
+      currentThali = key;
+      if (typeof updateTitle === "function") {
+    updateTitle();
+}
+
+
+      // active highlight
+      document.querySelectorAll(".thali-btn").forEach(b => b.classList.remove("active"));
+      this.classList.add("active");
+
+      const scanner = document.getElementById("scanner-line");
+      const result = document.getElementById("scan-result");
+
+      // hide previous
+if (result) {
+    result.classList.add("d-none");
+}
+
+      if (scanner) {
+    scanner.style.display = "none";
+}
+
+      // simulate scan
+      setTimeout(() => {
+
+       if (scanner) {
+    scanner.style.display = "none";
+}
+
+        const data = thaliNutrition[key]; // ✅ NOW WORKS
+
+        const calEl = document.getElementById("scan-cal");
+const proteinEl = document.getElementById("scan-protein");
+const carbsEl = document.getElementById("scan-carbs");
+const fatsEl = document.getElementById("scan-fats");
+
+if (calEl) calEl.innerText = data.calories;
+if (proteinEl) proteinEl.innerText = data.protein;
+if (carbsEl) carbsEl.innerText = data.carbs;
+if (fatsEl) fatsEl.innerText = data.fats;
+
+        // show overlay
+        if (result) {
+    result.classList.remove("d-none");
+}
+
+      }, 1000);
+
+    });
+  });
+
+
+});
+
+    function showCaloriesWithDelay() {
+
+    const labels = document.querySelectorAll(".cal-label");
+
+    // hide first
+    labels.forEach(l => l.classList.remove("show"));
+
+    // show one by one (nice effect 🔥)
+    labels.forEach((label, index) => {
+        setTimeout(() => {
+            label.classList.add("show");
+        }, index * 200); // stagger animation
+    });
+}
+    setTimeout(() => {
+    showCaloriesWithDelay();
+}, 1200); // after thali loads
+</script>
+<script>
+   // =======================
+// UPDATE CALORIES LABELS
+// =======================
+function updateLabels(region, type) {
+
+// ✅ ADD HERE (inside function)
+    const offsets = {
+        chapati: { x: 0, y: 10 },
+        rice: { x: 0, y: 5 },
+        dal: { x: 0, y: 12 },
+        paneer: { x: -5, y: 10 },
+        veg: { x: 0, y: 8 },
+        salad: { x: 0, y: 6 },
+        sweet: { x: 0, y: 6 }
+    };
+
+    const menu = thaliMenus[region]?.[type];
+    if (!menu) return;
+
+    document.querySelectorAll(".thali-food").forEach(item => {
+
+        const key = item.getAttribute("data-item");
+        const label = document.getElementById("label-" + key);
+
+        if (!menu[key] || !label) return;
+
+        const foodName = menu[key].food;
+        const calories = foodCalories[foodName] || 0;
+
+        label.innerText = foodName + " • " + "🔥" + calories + " kcal";
+
+        // position label
+        const rect = item.getBoundingClientRect();
+const parentRect = document.querySelector(".thali-plate-real").getBoundingClientRect();
+
+// ✅ APPLY OFFSET HERE
+        const offset = offsets[key] || { x: 0, y: 0 };
+
+        label.style.left =
+            (rect.left - parentRect.left + rect.width / 2 + offset.x) + "px";
+
+        label.style.top =
+            (rect.top - parentRect.top + offset.y) + "px";
+
+    });
+}
+
+</script>
+<script>
+function createDetectionBoxes() {
+
+    console.log("YOLO BOX RUNNING");
+
+    const layer = document.getElementById("detection-layer");
+    const parent = document.querySelector(".thali-plate-real");
+
+    if (!layer || !parent) return;
+
+    layer.innerHTML = "";
+
+    document.querySelectorAll('.thali-food').forEach(item => {
+    const itemName = item.dataset.item;
+    const label = document.getElementById('label-' + itemName);
+
+    const rect = item.getBoundingClientRect();
+    const parentRect = item.parentElement.getBoundingClientRect();
+
+    const top = rect.top - parentRect.top;
+    const left = rect.left - parentRect.left + rect.width / 2;
+});
+
+// 🔥 run after page loads
+window.addEventListener('load', updateLabels);
+window.addEventListener('resize', updateLabels);
+</script>
+    <script>
+        const buttons = document.querySelectorAll(".thali-btn");
+const indicator = document.getElementById("scrollIndicator");
+
+function moveIndicator(el) {
+    const container = document.getElementById("thaliScroll");
+    const rect = el.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+
+    const scrollLeft = container.scrollLeft;
+
+    indicator.style.width = rect.width + "px";
+    indicator.style.left =
+        (rect.left - containerRect.left + scrollLeft) + "px";
+
+    // 🎨 color sync
+    const type = el.dataset.thali;
+
+    const colorMap = {
+        indian: "#ff5722",
+        rajasthani: "#e67e22",
+        south: "#27ae60",
+        bengali: "#8e44ad",
+        maharashtrian: "#2980b9"
+    };
+
+    indicator.style.background = colorMap[type];
+}
+    </script>
+    <script>
+        const colorMap = {
+    indian: "#ff5722",
+    rajasthani: "#e67e22",
+    south: "#27ae60",
+    bengali: "#8e44ad",
+    maharashtrian: "#2980b9"
+};
+
+function moveIndicator(el) {
+    const parentRect = el.parentElement.getBoundingClientRect();
+    const rect = el.getBoundingClientRect();
+
+    indicator.style.width = rect.width + "px";
+    indicator.style.left = (rect.left - parentRect.left) + "px";
+
+    // 🔥 change color
+    const type = el.dataset.thali;
+    indicator.style.background = colorMap[type];
+}
+    </script>
+    <script>
+        const title = document.getElementById("thali-title");
+
+const titleColors = {
+    indian: ["#ff5722", "#ff8a65"],
+    rajasthani: ["#e67e22", "#f39c12"],
+    south: ["#27ae60", "#2ecc71"],
+    bengali: ["#8e44ad", "#9b59b6"],
+    maharashtrian: ["#2980b9", "#3498db"]
+};
+
+function updateTitleColor(region) {
+    const colors = titleColors[region] || ["#333", "#666"];
+
+    title.style.background = `linear-gradient(45deg, ${colors[0]}, ${colors[1]})`;
+    title.style.webkitBackgroundClip = "text";
+    title.style.webkitTextFillColor = "transparent";
+}
+    </script>
+    <script>
+        const thaliAssets = {
+    indian: {
+        name: "Indian Thali",
+        img: "/static/.png"
+    },
+    rajasthani: {
+        name: "Rajasthani Thali",
+        img: "/static/rajasthani.png"
+    },
+    south: {
+        name: "South Indian Thali",
+        img: "/static/south.png"
+    },
+    bengali: {
+        name: "Bengali Thali",
+        img: "/static/bengali.png"
+    },
+    maharashtrian: {
+        name: "Maharashtrian Thali",
+        img: "/static/maharashtrian.png"
+    }
+};
+
+function updateTitle(region) {
+    const data = thaliAssets[region];
+
+    document.getElementById("thali-text").innerText = data.name;
+    document.getElementById("thali-icon").src = data.img;
+}
+
+        #thali-icon {
+    transition: all 0.3s ease;
+}
+
+#thali-icon:hover {
+    transform: scale(1.1);
+}
+    </script>
+    <script>
+        function updateBackground(region) {
+    const bg = document.getElementById("app-bg");
+
+    // remove all bg classes
+    bg.classList.remove(
+        "bg-indian",
+        "bg-rajasthani",
+        "bg-south",
+        "bg-bengali",
+        "bg-north",
+        "bg-maharashtrian"
+    );
+
+    // add new one
+    bg.classList.add("bg-" + region);
+}
+    </script>
+    <script>
+        const bg = document.getElementById("app-bg");
+const innerBg = document.getElementById("thali-empty-bg");
+
+function updateBackground(region) {
+
+    const classes = [
+        "bg-indian",
+        "bg-rajasthani",
+        "bg-south",
+        "bg-bengali",
+        "bg-maharashtrian"
+    ];
+
+    const innerClasses = [
+        "bg-indian-inner",
+        "bg-rajasthani-inner",
+        "bg-south-inner",
+        "bg-bengali-inner",
+        "bg-maharashtrian-inner"
+    ];
+
+    // remove all
+    bg.classList.remove(...classes);
+    innerBg.classList.remove(...innerClasses);
+
+    // add current
+    bg.classList.add("bg-" + region);
+    innerBg.classList.add("bg-" + region + "-inner");
+}
+    </script>
+    <script>
+        // Map of thali -> their decorative images
+const thaliDecorImages = {
+  indian: ["namaste.png", "namaste.png"],
+  rajasthani: ["Turban.png", "Turban.png"],
+  south: ["dosa_man.png.", "dosa_man.png"],
+  bengali: ["Bengali_women.png", "Bengali_women.png"],
+  maharashtrian: ["maha_greet.png", "maha-greet_man.png"]
+};
+
+// Function to show decorations
+function showThaliDecor(thali) {
+  const decorContainer = document.getElementById("thali-decorations");
+  decorContainer.innerHTML = ""; // clear previous images
+
+  if (!thaliDecorImages[thali]) return;
+
+  thaliDecorImages[thali].forEach(src => {
+    const img = document.createElement("img");
+    img.src = `/static/${src}`;  // adjust path as per your Flask static folder
+    decorContainer.appendChild(img);
+
+    // Add special class for Maharashtra Thali
+    if (thali === "maharashtrian") img.classList.add("maha-icon");
+    // animate in
+    setTimeout(() => img.classList.add("show"), 50);
+  });
+}
+
+// Attach to all thali buttons
+document.querySelectorAll(".thali-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const thali = btn.dataset.thali;
+    showThaliDecor(thali);
+  });
+});
+    </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</div>
+</body>
+</html>
