@@ -3,3 +3,7 @@ gunicorn
 requests
 mysql-connector-python
 qrcode[pil]
+pillow
+numpy
+tensorflow
+opencv-python-headless
