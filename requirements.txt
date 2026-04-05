@@ -4,5 +4,6 @@ requests
 mysql-connector-python
 qrcode[pil]
 pillow
-numpy
+numpy==1.23.5
 opencv-python-headless
+tensorflow==2.12.0
