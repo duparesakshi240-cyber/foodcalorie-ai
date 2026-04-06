@@ -2,7 +2,7 @@ Flask==2.3.3
 gunicorn==21.2.0
 requests==2.31.0
 mysql-connector-python==8.0.33
-pillow==10.2.0
+pillow==10.1.1
 numpy==1.23.5
 opencv-python-headless==4.8.0.76
 qrcode[pil]==7.4.2
