@@ -1,4 +1,4 @@
-fflask==2.3.3
+Flask==2.3.3
 gunicorn==21.2.0
 requests==2.31.0
 mysql-connector-python==8.0.33
